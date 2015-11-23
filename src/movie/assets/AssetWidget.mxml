@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:Script>
+		<![CDATA[
+		
+		import mx.core.Application;
+		import movie.movie.Movie;
+		
+		/**
+		 * To be overridden by a widget component. This is just the parent class to define the
+		 * interface.
+		 */
+		
+		public var defaultControls:Array = ["size", "rotation", "zIndex"];
+		public var defaultBindingVariables:Object = {size:"theSize", rotation:"theRotation", text:"text", zIndex:"zIndex", scale:"scale"};
+		public var targetProperties = {size:"value", rotation:"value", text:"text", zIndex:"value", scale:"value"};
+		
+		public var target:AssetInstance;
+		
+		
+		/**
+		 * Called whenever this widget is set for a different asset. So the control settings need to be 
+		 * initialized for the new asset.
+		 */
+		public function initializeControls(asset:AssetInstance) {
+			target = asset;
+		};	
+					
+					
+		public function mouseDownHandler(event:MouseEvent)
+		{
+			Application.application.stage.addEventListener(MouseEvent.MOUSE_UP, this._mouseUpHandler);
+		}
+		
+		
+		public function _mouseUpHandler(event:MouseEvent)
+		{
+			Movie.movie.captureAssetAtCurrentFrame(target);
+			
+			Application.application.stage.removeEventListener(MouseEvent.MOUSE_UP, this._mouseUpHandler);
+		}
+		
+		
+		public function changeHandler(event:Event)
+		{
+			var properties:Object = new Object;
+			properties[event.target.name] = event.target.value;
+			//trace(event.target.value + " max:" + event.target.maximum);
+			this.target.setProperties(properties);
+		}
+		
+		
+		public function zIndexChangeHandler(event:Event) {
+			target.changeZIndex(event.target.value);
+		}
+		
+		
+		// keep the key down from propagating up - specifically to keepthe delete button from 
+		// deleting an asset on the stage
+		public function _keyDownHandler(event:Event) {
+			event.stopPropagation();
+		}
+		
+		
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>
+
+
+

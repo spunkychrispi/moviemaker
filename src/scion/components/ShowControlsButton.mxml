@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FadeButton xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="17" height="17" onlyFadeIcons="true" onlyHighlightOnRollover="true">
+	
+	<mx:Script>
+		<![CDATA[
+			
+		
+			override protected function updateDisplayList(w:Number, h:Number):void
+			{
+				if (w) {
+					graphics.clear();
+					
+					// draw the pause
+					//graphics.lineStyle(1, 0xFFFFFF, 1);
+					
+					if (activeStateOn) {
+						graphics.beginFill(0xFFFFFF, currentFadeAlpha);
+						var vertices:Vector.<Number> = new Vector.<Number>();
+						vertices.push(3, 6, 13, 6, 8, 10);
+						graphics.drawTriangles(vertices);
+						graphics.endFill();
+					} else {
+						graphics.beginFill(0xFFFFFF, currentFadeAlpha);
+						var vertices:Vector.<Number> = new Vector.<Number>();
+						vertices.push(8, 6, 13, 11, 3, 11);
+						graphics.drawTriangles(vertices);
+						graphics.endFill();
+					}
+						
+					// draw the border
+					//graphics.lineStyle(1, 0xFFFFFF, 1, false);
+					//graphics.drawRect(0, 0, w, h);
+					
+				}
+				super.updateDisplayList(w,h);
+			}	
+		]]>
+	</mx:Script>
+	
+	
+</FadeButton>

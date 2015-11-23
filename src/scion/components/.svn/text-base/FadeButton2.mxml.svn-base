@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml" cornerRadius="0" fillAlphas="[1,1]" highlightAlphas="[0,0]" fillColors="[0x000000,0x000000]" focusAlpha="0">
+	
+	<mx:Script>
+		<![CDATA[
+			/**
+			 * Button appears faded except on rollover.
+			 */
+			 public override function drawFocus(isFocused:Boolean):void {
+			 }
+		]]>
+	</mx:Script>
+	
+</mx:Button>

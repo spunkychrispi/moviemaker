@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="ccHandler(event);">
+	
+	<mx:Script>
+		<![CDATA[
+					
+			import flash.events.Event;
+			import flash.events.ProgressEvent;
+			import flash.media.Sound;
+			import flash.net.URLRequest;
+			
+			function ccHandler(event:Event) {
+				var s:Sound = new Sound();
+				s.addEventListener(ProgressEvent.PROGRESS, onLoadProgress);
+				//s.addEventListener(Event.COMPLETE, onLoadComplete);
+				s.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+				
+				var req:URLRequest = new URLRequest("http://spunkychrispiimages.s3.amazonaws.com/4ba028dc4fbdf.mp3");
+				s.load(req);
+			}
+			
+			function onLoadProgress(event:ProgressEvent):void
+			{
+			    var loadedPct:uint =         Math.round(100 * (event.bytesLoaded / event.bytesTotal));
+			    trace("The sound is " + loadedPct + "% loaded.");
+			    
+			    var localSound:Sound = event.target as Sound;
+			   if (!localSound.isBuffering) {
+			   		onLoadComplete(event);
+			   		localSound.removeEventListener(ProgressEvent.PROGRESS, onLoadProgress);
+			   }
+			}
+			
+			function onLoadComplete(event:Event):void
+			{
+			    var localSound:Sound = event.target as Sound;
+			    localSound.play();
+			}
+			function onIOError(event:IOErrorEvent)
+			{
+			    trace("The sound could not be loaded: " + event.text);
+			}
+
+]]>
+	</mx:Script>
+	
+	
+</mx:Application>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Drawer xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="scion.components.*" width="707" height="170" tabWidth="22" creationComplete="initCCHandler(event);" backgroundColor="#000000" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			import movie.assets.AssetClass;
+			import movie.assets.AssetClassListItem;
+			import movie.movie.Movie;
+		
+			import flash.text.AntiAliasType;
+			import mx.controls.TextInput;
+			import mx.core.Application;
+			import movie.util.ErrorHandler;
+			import google.analytics.EventTracker; 
+			import scion.util.ScionErrorHandler;
+			
+			[Bindable]
+			var xImageClass:Class;
+			
+			[Embed(source='/assets/maker_tab_open_btn.png')]
+			var openImageClass:Class;
+			
+			[Embed(source='/assets/maker_tab_close_btn.png')]
+			var closeImageClass:Class;
+			
+			public var assetListContainer:DisplayObjectContainer;
+			public var textAssetListContainer:DisplayObjectContainer;
+			public var audioAssetListContainer:DisplayObjectContainer;
+			public var imageAssetListContainer:DisplayObjectContainer;
+			
+			protected var forceTextHelp:Boolean = true;
+			
+			public var currentTabIndex:int;
+			
+			
+			public function resetState() {
+				forceTextHelp = true;
+				clickHandler(0);
+			}	
+				
+			
+			function initCCHandler(event:Event) {
+				assetListContainer = assetsTab.assetListContainer;
+				textAssetListContainer = textTab.assetListContainer;
+				audioAssetListContainer = cannedAudioTab.assetListContainer;
+				imageAssetListContainer = cannedImageTab.assetListContainer;
+				
+				xImageClass = closeImageClass;
+				currentTabIndex = 0;
+			}
+			
+			
+			function clickHandler(index:int, event:Event=null) {
+				
+				currentTabIndex = index;
+				var tabMappings:Object = {1:'FX Tab', 2:'Media Tab', 3:'Audio Tab', 4:'Text Tab'};
+				if (index != 4) {
+					EventTracker.trackEvent('Movie Maker', tabMappings[index+1]);
+				} else {
+					EventTracker.trackEvent('Movie Maker', 'Preview');
+				}
+				
+				// if this is the text tab and it's opened for the first time, show the text help
+				if (index == 3 && forceTextHelp) {
+					forceTextHelp = false;
+					ScionErrorHandler.makerTextHelp();
+					
+					// add the first text to the movie
+					var textClassItem:AssetClassListItem = textAssetListContainer.getChildAt(0) as AssetClassListItem;
+					textClassItem.asset.addToMovie(Movie.movie, 0, 0);
+				}	
+				
+				if (event && event.currentTarget.id != "navButton5") Application.application.theMovie.mode = 'maker';
+				
+				theViewStack.selectedIndex = index;
+				
+				navButton1.deactivate(true);
+				navButton2.deactivate(true);
+				navButton3.deactivate(true);
+				navButton4.deactivate(true);
+				//navButton5.deactivate();
+				var buttonNumber = index+1;
+				this["navButton"+buttonNumber].activate();
+				
+				if (currentTabIndex < 3) {
+					nextButton.visible = true;
+					saveButton.visible = false;
+				} else {
+					nextButton.visible = false;
+					saveButton.visible = true;
+					
+				} 
+				
+			}
+			
+			/*function previewClickHandler(event:Event) {
+				
+				Application.application.theMovie.mode = 'preview';
+				Application.application.theMovie.setControlWidget();
+				Application.application.theMovie.playAll();
+				
+				clickHandler(event, 4);
+			}*/
+			
+			
+			function nextClickHandler(event:Event) {
+				
+				clickHandler(currentTabIndex+1, event);
+			}
+			
+			
+			function saveClickHandler(event:Event) {
+				Application.application.displaySaveCmpnt(true);
+			}
+			
+			
+			public override function openDrawer(event:Event=null) {
+				
+				ExternalInterface.call("closeJSDrawers");
+				super.openDrawer(event);
+				xImageClass = closeImageClass;
+			}
+			
+			
+			public override function closeDrawer(event:Event=null) {
+				super.closeDrawer(event);
+				xImageClass = openImageClass;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	<ns1:FadeButton x="26" y="0" width="152" height="21" click="clickHandler(0, event);" id="navButton1" imageClass="@Embed('/assets/movie_maker_arrow1_ON.png')" labelText="Choose your FX" labelX="6" labelY="1" activeStateOn="true" fontSize="14" />
+	<ns1:FadeButton x="171" y="0" width="152" height="21" click="clickHandler(1, event);" id="navButton2" imageClass="@Embed('/assets/movie_maker_arrow2_ON.png')" labelText="Add Media" labelX="10" labelY="1" fontSize="14" />
+	<ns1:FadeButton x="316" y="0" width="152" height="21" click="clickHandler(2, event);" id="navButton3" imageClass="@Embed('/assets/movie_maker_arrow2_ON.png')" labelText="Add Audio" labelX="10" labelY="1" fontSize="14" />
+	<ns1:FadeButton x="461" y="0" width="152" height="21" click="clickHandler(3, event);" id="navButton4" imageClass="@Embed('/assets/movie_maker_arrow2_ON.png')" labelText="Add Text" labelX="10" labelY="1" fontSize="14" />	
+	
+	<mx:Canvas x="0" y="0" width="22" height="170" backgroundColor="#0084FF" verticalScrollPolicy="off" click="tabClickHandler(event);" useHandCursor="true" buttonMode="true" >
+		 <mx:Image x="4" y="3" width="9" height="9" id="tabButton" source="{xImageClass}" rollOver="" useHandCursor="true" buttonMode="true" mouseChildren="false" />
+		 <mx:Label x="0" y="164" text="MAKE YOUR MOVIE" rotation="-90" color="#FFFFFF" fontSize="14" useHandCursor="true" buttonMode="true" mouseChildren="false" />
+	</mx:Canvas>
+	
+	
+	
+	<mx:ViewStack id="theViewStack" x="34" y="22" creationPolicy="all">
+		
+		<!--swf fx-->
+		<ns1:MovieMakerCannedAssetsTab id="assetsTab" label1="Pick your FX" label2="Preview and select your MOTIONfx graphics and begin to build your movie." />
+		
+		<!--canned images-->
+		<ns1:MovieMakerCannedAssetsTab id="cannedImageTab" label1="Use one of our images to make a movie" doUploadAssets="true" uploadAssetsIndex="5" uploadAssetsLabel="Upload your own media" />
+		
+		<!--canned audio-->
+		<ns1:MovieMakerCannedAssetsTab id="cannedAudioTab" label1="Use one of our audio assets to make a movie" doUploadAssets="true" uploadAssetsIndex="6" uploadAssetsLabel="Upload your own audio" />
+		
+		
+		<ns1:MovieMakerTextTab id="textTab" />
+		
+		<mx:Canvas />
+		
+		<ns1:MovieMakerMediaTypeTab />
+		
+		<ns1:MovieMakerAudioTab id="audioTab" />
+		
+		<ns1:MovieMakerImagesTab />
+		
+		<ns1:MovieMakerYouTubeTab />
+		
+	
+	</mx:ViewStack>
+	
+	<ns1:FadeButton x="615" y="90" width="79" height="22" click="nextClickHandler(event);" id="nextButton" 
+		name="nextButton" backgroundColor="#0870D0" borderStyle="solid" borderThickness="1" borderColor="#005CB2" 
+		labelText="Next" labelX="18" labelY="-1" fontSize="16" activeStateOn="true" />
+
+	<ns1:FadeButton x="600" y="90" width="96" height="22" click="saveClickHandler(event);" id="saveButton" 
+		name="saveButton" backgroundColor="#D04429" borderStyle="solid" borderThickness="1" borderColor="#5B1D11" 
+		labelText="Save Movie" labelX="6" labelY="-1" fontSize="16" activeStateOn="true" visible="false" />	
+		
+	
+</Drawer>

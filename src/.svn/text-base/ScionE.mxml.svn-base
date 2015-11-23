@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  layout="absolute" verticalScrollPolicy="off" horizontalScrollPolicy="off" 
+	applicationComplete="_doInitialize(event);" xmlns:ns1="movie.movie.*" 
+	width="745" height="408" preinitialize="preinit(event);"  xmlns:ns2="movie.util.*" 
+	xmlns:ns3="scion.components.*" backgroundColor="#000000" preloader="scion.movie.ScionEmbedDownloadProgressBar">
+<!-- EMBEDDED VERSION - have to use a different movie because the app width and height are different -->
+	<mx:Style source="main.css" />
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.List;
+			import mx.core.UIComponent;
+			import movie.util.DataClientRemoteObject;
+			
+			import mx.controls.Alert; 
+        	import mx.events.*;
+        	import movie.assets.*;
+        	import movie.util.*;
+        	import movie.movie.* 
+        	import scion.movie.ScionMovie;
+        	import mx.containers.Canvas; 
+        	import flash.system.Security;
+        	import scion.controller.MovieController;
+        	import flash.display.StageScaleMode;
+        	import mx.events.CloseEvent;
+        	
+        	
+        	public var theMovie:ScionMovie;
+			
+			public var server:String = "";
+        	
+
+			private var theFrameRate:int = 24;	// Application.application.frameRate doesn't seem to be reliable for some reason
+											// so record the frameRate here
+			private var numberOfFrames:int = 4;     // this is just an initializer - the actual number of frames will depend on
+			
+			[Bindable]											// the length of the youtube or scion fx asset being used.
+			public var stageWidth:int = 745;			// deprecated - now coming from theMovie class, which gets them from
+			
+			[Bindable]										// the size of the theStage
+			public var stageHeight:int = 408;
+			
+			// flashVars
+			public var mode:String;					// mode=player|maker
+			public var movieID:String;				// id of the movie being played
+			public var userMovieID:String;			// the id of the user's movie saved in the session
+			public var shareMovieID:String;			// id of the share movie - either the user's, or the last one played
+			[Bindable]
+			public var shareTabVisible:Boolean;
+			
+			public var movieChangesSaved:Boolean;			// flag if the most recent changes to the movie have been saved
+															// controls showing of the save form, and the alert box
+															// when the drawer tabs are clicked
+			
+			
+			protected function preinit(event:Event) {
+				setStyle("backgroundGradientColors", [0x000000, 0x000000]);
+			}
+			
+
+        	private function _doInitialize(event:Event):void {
+        		
+        		// since there are no changes at startup, set this to true
+        		movieChangesSaved = true;
+        		
+        		Security.allowInsecureDomain("*");
+				Security.allowDomain("*");
+				
+				mode = "player";
+				movieID = parameters.movieId;
+				
+				stage.scaleMode = StageScaleMode.EXACT_FIT;
+				
+				stage.frameRate = theFrameRate;
+	        	this.theMovie = new ScionMovie(theStage, null, numberOfFrames, theFrameRate);
+	        	theMovie.mode = mode;
+	        	//theMovie.goToFrame(1);
+	        	
+				// create the controller
+				var dummy:* = new MovieController(theMovie);
+	        	
+	        	// load the movie
+        		MovieController.controller.loadMovie(movieID, MovieController.S3_BUCKET);
+        	}
+
+	        
+	        private function playTheMovie() 
+	        {
+	        	//theMovie.playFrame(4);
+	        	theMovie.play(true);
+	        }
+
+	        
+	        public function showProgressBar(source:Object=null, label:String=null, indeterminate=false, hideOnDone=true) {
+	        	//theProgressBar.mode = mode;
+	        	
+	        	theProgressBar.indeterminate = indeterminate;
+				theProgressBar.source = source;
+				theProgressBar.visible = true;
+				
+				if (label) {
+					theProgressBar.label = label;
+				}
+				if (!indeterminate && hideOnDone) {
+					theProgressBar.addEventListener(Event.COMPLETE, hideProgressBar);
+				} 
+			}
+		
+			public function hideProgressBar(event:Event=null) {
+				theProgressBar.visible = 0;
+			}
+			
+			
+			// dummy functions to get the movie to compile with this embed version
+			public function displaySaveCmpnt() {
+   				//if (! movieChangesSaved) saveForm.visible = true;
+   			}
+   			
+   			public function hideSaveCmpnt() {
+   				/*if (saveForm.visible) {
+   					saveForm.visible = false;
+   				} */
+   			}
+	
+		
+		]]>
+	</mx:Script>  
+	
+
+	<mx:Canvas x="0" y="0" width="{stageWidth}" height="{stageHeight}" id="theStage" backgroundAlpha="1.0" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	</mx:Canvas>
+	
+	<mx:ProgressBar id="theProgressBar" x="270" y="180" visible="false"/>
+	
+	<ns3:MoviePlayerControlsContainer x="0" y="353" visible="true" id="playerControls" />
+	
+	
+</mx:Application>

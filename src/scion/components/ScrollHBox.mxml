@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml">
+
+<mx:Script>
+	<![CDATA[
+
+		import mx.containers.Canvas;
+		import mx.core.mx_internal;
+	
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+		{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			
+			if (this.verticalScrollBar) {
+				if (!verticalScrollBar.mx_internal::upArrow.buttonMode) {
+					use namespace mx_internal;
+					verticalScrollBar.mx_internal::upArrow.buttonMode = true;
+					verticalScrollBar.mx_internal::downArrow.buttonMode = true;
+					verticalScrollBar.mx_internal::scrollThumb.buttonMode = true;
+				}
+			}
+					
+			if (this.horizontalScrollBar ) {
+				if (!horizontalScrollBar.mx_internal::upArrow.buttonMode) {
+					use namespace mx_internal;
+					horizontalScrollBar.mx_internal::upArrow.buttonMode = true;
+					horizontalScrollBar.mx_internal::downArrow.buttonMode = true;
+					horizontalScrollBar.mx_internal::scrollThumb.buttonMode = true;
+				}
+			}
+		}
+		
+	]]>
+</mx:Script>
+
+</mx:HBox>

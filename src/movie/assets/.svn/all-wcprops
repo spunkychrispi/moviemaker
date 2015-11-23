@@ -1,0 +1,293 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/source/flex/!svn/ver/2/Scion/src/movie/assets
+END
+AssetWidgetManager.as
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetWidgetManager.as
+END
+ScionFX2AssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ScionFX2AssetInstance.as
+END
+ImageAssetInstanceCmpnt.mxml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ImageAssetInstanceCmpnt.mxml
+END
+SWFAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/source/flex/!svn/ver/2/Scion/src/movie/assets/SWFAssetInstance.as
+END
+ImageAssetInstance_save.as
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ImageAssetInstance_save.as
+END
+TextAssetInstanceCmpnt.mxml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/source/flex/!svn/ver/2/Scion/src/movie/assets/TextAssetInstanceCmpnt.mxml
+END
+AssetWidget.mxml
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetWidget.mxml
+END
+NewSWFAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/source/flex/!svn/ver/2/Scion/src/movie/assets/NewSWFAssetInstance.as
+END
+ScionFXAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ScionFXAssetInstance.as
+END
+SWFAssetInstanceCmpnt.mxml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/source/flex/!svn/ver/2/Scion/src/movie/assets/SWFAssetInstanceCmpnt.mxml
+END
+SWFAssetInstance_save.as
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/source/flex/!svn/ver/2/Scion/src/movie/assets/SWFAssetInstance_save.as
+END
+ScionImageAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ScionImageAssetInstance.as
+END
+SWFAssetInstance_preByteLoaderMethod.as
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/source/flex/!svn/ver/2/Scion/src/movie/assets/SWFAssetInstance_preByteLoaderMethod.as
+END
+AudioAssetInstanceCreator.as
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AudioAssetInstanceCreator.as
+END
+ImageAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ImageAssetInstance.as
+END
+TextAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/source/flex/!svn/ver/2/Scion/src/movie/assets/TextAssetInstance.as
+END
+ScionImageCannedAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ScionImageCannedAssetInstance.as
+END
+ScionYouTubeAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ScionYouTubeAssetInstance.as
+END
+AssetEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetEvent.as
+END
+YouTubeAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/source/flex/!svn/ver/2/Scion/src/movie/assets/YouTubeAssetInstance.as
+END
+ScionAudioAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ScionAudioAssetInstance.as
+END
+AssetInstanceWidget.mxml
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetInstanceWidget.mxml
+END
+AudioAssetInstance_old.as
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AudioAssetInstance_old.as
+END
+AssetInstanceCreator.as
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetInstanceCreator.as
+END
+AudioAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AudioAssetInstance.as
+END
+ImageAssetInstanceCreator.as
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ImageAssetInstanceCreator.as
+END
+YouTubeAssetInstance_hold.as
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/source/flex/!svn/ver/2/Scion/src/movie/assets/YouTubeAssetInstance_hold.as
+END
+ImageAssetClassCreator.as
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ImageAssetClassCreator.as
+END
+AssetClassListItem_old.mxml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetClassListItem_old.mxml
+END
+TextAssetInstance_orig.as
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/source/flex/!svn/ver/2/Scion/src/movie/assets/TextAssetInstance_orig.as
+END
+AssetClassListItem.mxml
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetClassListItem.mxml
+END
+YouTubeAssetInstance_new.as
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/source/flex/!svn/ver/2/Scion/src/movie/assets/YouTubeAssetInstance_new.as
+END
+ScionAudioCannedAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ScionAudioCannedAssetInstance.as
+END
+VideoAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/source/flex/!svn/ver/2/Scion/src/movie/assets/VideoAssetInstance.as
+END
+AudioAssetInstance_new.as
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AudioAssetInstance_new.as
+END
+AssetClassList.as
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetClassList.as
+END
+AssetImporter.as
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetImporter.as
+END
+YouTubeAssetInstanceCreator.as
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/source/flex/!svn/ver/2/Scion/src/movie/assets/YouTubeAssetInstanceCreator.as
+END
+AudioAssetInstanceCmpnt.mxml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AudioAssetInstanceCmpnt.mxml
+END
+YouTubeAssetClassCreator.as
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/source/flex/!svn/ver/2/Scion/src/movie/assets/YouTubeAssetClassCreator.as
+END
+ScionTextFXAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/source/flex/!svn/ver/2/Scion/src/movie/assets/ScionTextFXAssetInstance.as
+END
+AssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetInstance.as
+END
+TestAssetInstance.as
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/source/flex/!svn/ver/2/Scion/src/movie/assets/TestAssetInstance.as
+END
+AssetClass.as
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AssetClass.as
+END
+SWFAssetInstanceCmpnt_hold.mxml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/source/flex/!svn/ver/2/Scion/src/movie/assets/SWFAssetInstanceCmpnt_hold.mxml
+END
+TestAssetInstanceCmpnt.as
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/source/flex/!svn/ver/2/Scion/src/movie/assets/TestAssetInstanceCmpnt.as
+END
+AudioAssetClassCreator.as
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/source/flex/!svn/ver/2/Scion/src/movie/assets/AudioAssetClassCreator.as
+END
+MovieYouTubePlayer.as
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/source/flex/!svn/ver/2/Scion/src/movie/assets/MovieYouTubePlayer.as
+END

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="scion.components.*" borderThickness="1" 
+	borderStyle="solid" borderColor="#FFFFFF" horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+	 backgroundColor="#000000"  backgroundAlpha=".5"
+	width="734" height="343">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import scion.components.FadeButton;
+			import mx.managers.PopUpManager;
+		
+			
+			function clickHandler(event:Event)
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	<mx:Label styleName="alertTitle" id="titleLabel" text="Need Instructions?" 	x="10" y="10" />
+	
+	<ns1:FadeButton click="clickHandler(event);" imageClass="@Embed('/assets/info_close_btn.jpg')" 
+				width="14" height="13" x="708" y="10" fadeAlpha="1" />
+	
+	
+	<mx:VBox width="713" height="281" horizontalScrollPolicy="off" x="10" y="50" verticalGap="15">
+	
+		<mx:Canvas>
+			<mx:Label x="1" y="1" text="1." styleName="helpLabel" />
+			<mx:Label x="18" text="Choose a MOTIONfx." styleName="helpStep" />
+			<mx:Label x="150" y="1" text="(to layer over your video or image)" styleName="help" />
+		
+			<mx:Label x="18" y="19" styleName="help" text="Click on a Motionfx to add it to the stage. Click the" />
+			<mx:Label x="330" y="19" styleName="help" text="icon or scroll through the timeline to see it in motion." />
+			
+			<mx:Image source="@Embed('/assets/asset_button_play.png')" x="309" y="19" />
+		</mx:Canvas>
+		
+		<mx:Canvas>
+			<mx:Label x="1" y="1" text="2." styleName="helpLabel" />
+			<mx:Label x="18" text="Add TEXTfx." styleName="helpStep" />
+		
+			<mx:Text x="18" y="19" width="660" styleName="help">
+				<mx:text>
+					Click and drag a type treatment to the stage. Enter your text into the“make your movie” menu beneath the stage. Adjust the size and angle of your text with the scale and rotate controls.
+				</mx:text>
+			</mx:Text>
+			
+			<mx:Text x="18" y="70" width="660" styleName="help">
+				<mx:text>
+					To move your Textfx across the stage, click and drag a type treatment to the stage (as above) and scroll the timeline forward to your desired point, then move, scale or rotate. To see your Textfx in motion, click “Preview” or drag the scroll bar.
+				</mx:text>
+			</mx:Text>
+		</mx:Canvas>
+		
+		<mx:Canvas>
+			<mx:Label x="1" y="1" text="3." styleName="helpLabel" />
+			<mx:Label x="18" text="Upload MEDIA." styleName="helpStep" />
+		
+			<mx:Text x="18" y="19" width="660" styleName="help">
+				<mx:text>
+					Click the “Browse” button to upload a file from your desktop, upload your youTube link or choose the media we provide. You’ll see the Motionfx track overlay your selected media. You can also scroll the timeline to see how they interact.
+				</mx:text>
+			</mx:Text>
+		</mx:Canvas>
+		
+		<mx:Canvas>
+			<mx:Label x="1" y="1" text="4." styleName="helpLabel" />
+			<mx:Label x="18" text="Submit YOUR VIDEO." styleName="helpStep" />
+		
+			<mx:Text x="18" y="19" width="660" styleName="help">
+				<mx:text>
+					You can always make changes and preview your progress every step of the way. When your video is complete, click “Submit” to enter it in competition. And, don’t forget to share it with your friends.
+					</mx:text>
+			</mx:Text>
+		</mx:Canvas>
+		
+		
+	</mx:VBox>
+	
+	
+</mx:Canvas>

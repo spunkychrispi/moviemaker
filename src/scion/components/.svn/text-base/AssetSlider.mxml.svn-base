@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:UIComponent xmlns:mx="http://www.adobe.com/2006/mxml" >
+
+	<mx:Script>
+		<![CDATA[
+		import mx.events.SliderEvent;
+		import mx.controls.VSlider;
+		import scion.components.skins.AssetSliderThumb;
+		import scion.components.skins.AssetSliderTrack;
+		import mx.binding.utils.BindingUtils;
+		import movie.movie.Movie;
+		
+		public var slider:VSlider;
+		
+		//public var value:Number;
+		public var minimum:Number;
+		public var maximum:Number;
+		
+		//public var value:Number;
+		
+		protected var _value:Number;
+		public function set value(inValue:Number) 
+		{
+			_value = inValue;
+			slider.value = inValue;
+		}
+		
+		/*public function get value()
+		{
+			return _value;
+		}*/
+		
+		
+		[Embed('/assets/vertical_slider_thumb.png')]
+		var thumbSkin:Class;
+	
+	
+		function dragHandler(event:Event)
+		{
+			Movie.movie.stop();
+		}
+		
+		override protected function createChildren():void
+		{
+			super.createChildren();
+			//trace("ItemRenderer.createChildren(): ");
+			if (!slider)
+			{
+				slider = new VSlider();
+				slider.x = 9;
+				slider.y = 8;
+				slider.height = 120;
+				slider.width = 7;
+				slider.showDataTip = false;
+				slider.snapInterval = 1;
+				slider.liveDragging = true;
+				slider.minimum = minimum;
+				slider.maximum = maximum;
+				
+				slider.setStyle("trackSkin", AssetSliderTrack);
+				slider.sliderThumbClass = AssetSliderThumb;
+				slider.setStyle("thumbSkin", thumbSkin);
+				
+				slider.addEventListener(SliderEvent.THUMB_DRAG, dragHandler);
+				
+				addChild(slider);
+			}	
+		}
+			
+		override protected function measure():void
+	    {
+		    super.measure();
+		    width = 39;
+		    height = 132;
+		    measuredMinHeight = this.measuredHeight = 39;
+		    measuredMinWidth = this.measuredWidth = 132;
+	    }
+	    
+	    
+	    override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+		{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			
+			graphics.clear();
+			
+			graphics.beginFill(0x000000, .6);
+			
+			// the -5 on the height is a hack so that the bg on the slider won't interfere with the top of the bg
+			// on the maker controls
+			graphics.drawRect(0, 0, width, height-5);
+			graphics.endFill();
+			
+			graphics.lineStyle(1, 0xAFAFAF);
+			graphics.moveTo(0, 0);
+			graphics.lineTo(0, height);
+			graphics.lineTo(width, height);
+			graphics.lineTo(width, 0);
+			graphics.lineTo(0, 0);
+		}
+		
+
+		
+		]]>
+	</mx:Script>
+	
+</mx:UIComponent>

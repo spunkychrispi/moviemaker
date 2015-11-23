@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FadeButton xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="25" height="25" imageClass="{playButtonUpIcon}" activeImageClass="{playButtonDownIcon}"  click="playButtonClickHandler(event);" onlyFadeIcons="true" onlyHighlightOnRollover="true" imageX="-1" imageY="-1">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import movie.movie.Movie;
+			import mx.core.Application;
+			import mx.events.FlexEvent;
+			import movie.movie.MovieEvent;
+			
+			[Embed('/assets/play_button_pause.png')]
+			[Bindable]
+			var playButtonDownIcon:Class;
+			
+			[Embed('/assets/play_button_play.png')]
+			[Bindable]
+			var playButtonUpIcon:Class;
+				
+			override function initCCHandler(event:Event) {
+				Application.application.addEventListener(FlexEvent.APPLICATION_COMPLETE, appCompleteHandler);
+				
+				super.initCCHandler(event);
+			}
+			
+			
+			function appCompleteHandler(event:Event) {
+				Movie.movie.addEventListener(MovieEvent.MOVIE_START, movieStartHandler);
+				Movie.movie.addEventListener(MovieEvent.MOVIE_STOP, movieStopHandler);
+			}	
+				
+			function movieStartHandler(event:Event) {
+				activate();
+			}
+			
+			function movieStopHandler(event:Event) {
+				deactivate();
+			}
+			
+			
+			function playButtonClickHandler(event:Event) {
+				if (activeStateOn) {
+				//if (false) {
+					Movie.movie.stop();
+					deactivate();
+				} else {
+					
+					// if finished, start from the beginning again
+					if (Movie.movie.status == Movie.movie.MOVIE_FINISHED) {
+						Movie.movie.stop();
+						Movie.movie.goToFrame(1);
+						Movie.movie.playCurrentFrame();
+						Movie.movie.play();
+					} else {
+						Movie.movie.play();
+					}
+					
+					activate();
+				}
+			}
+		]]>
+	</mx:Script>
+	
+</FadeButton>

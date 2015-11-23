@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FadeButton xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="37" height="62" 
+	onlyHighlightOnRollover="true" imageClass="@Embed('/assets/help_button.png')" 
+	labelText="Need" labelX="3" labelY="2" onlyFadeIcons="true" fontSize="12" imageX="9" imageY="35"
+	label2Text="Help" label2X="5" label2Y="15">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import scion.util.ScionErrorHandler;
+			import mx.core.Application;
+			
+			override function clickHandler(event:Event) {
+				if (Application.application.movieMaker.currentTabIndex==3) {
+					ScionErrorHandler.makerTextHelp();
+				} else {
+					ScionErrorHandler.makerHelp();
+				}
+			
+			}
+			
+			override protected function updateDisplayList(w:Number, h:Number):void
+			{
+				graphics.clear();
+				
+				// draw the background - should have this in a style, but was encountering
+				// problems with that as the background styles affect the graphics drawing
+				// unless the graphics is put on a child, which wasn't working right away,
+				// so this is a quick fix
+				//graphics.beginFill(0x000000, .3);
+				//graphics.drawRect(0, 0, w, h);
+				
+				// draw the border
+				graphics.lineStyle(1, 0x459AFB, 1, false);
+				graphics.drawRect(0, 0, w, h);
+				
+				super.updateDisplayList(w,h);
+			}
+		
+		]]>
+	</mx:Script>
+	
+</FadeButton>

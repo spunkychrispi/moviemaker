@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DEPRECATED -->
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="300" height="620" creationComplete="_initCCHandler(event);">
+	<mx:HSlider x="7" y="35" width="286" height="32" name="height" id="heightControl" minimum="0" maximum="1000" snapInterval="1" liveDragging="true" mouseDown="_mouseDownHandler(event);" visible="false" />
+	<mx:HSlider x="7" y="94" width="286" height="32" name="width" id="widthControl" minimum="0" maximum="1000" snapInterval="1" liveDragging="true" mouseDown="_mouseDownHandler(event);" visible="false" />
+	<mx:HSlider x="6" y="165" width="286" height="32" name="rotation" id="rotationControl" minimum="-180" maximum="180" snapInterval="1" liveDragging="true" mouseDown="_mouseDownHandler(event);" visible="false" />
+	<mx:HSlider x="5" y="251" width="286" height="32" id="zIndexControl" snapInterval="1" tickInterval="1" minimum="0" maximum="{Application.application.theMovie.numChildren-Application.application.theMovie.numFloaters-1}" visible="false" liveDragging="true"/>
+	<mx:Label x="10" y="11" text="Height"  id="heightLabel" visible="false"/>
+	<mx:Label x="8" y="69" text="Width"  id="widthLabel" visible="false"/>
+	<mx:Label x="7" y="136" text="Rotation" id="rotationLabel" visible="false" />
+	<mx:Label x="11" y="218" text="Z-Index" id="zIndexLabel" visible="false" />
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher; 
+			import mx.events.SliderEvent;
+			import mx.core.Application;
+			import flash.events.MouseEvent;
+			
+			public var target:*;
+			
+			// just holders for the propertyNames until the initCCHandler is called
+			protected var _widthName:String;	
+			protected var _heightName:String;
+			protected var _rotationName:String;
+			
+			protected var _enabledControls:Array;
+			protected var _bindingVariables:Object;
+			protected var _targetProperties:Object;
+			
+			public function constructor(targetObject:*, enabledControls:Array=null, bindingVariables:Array=null)
+			{
+				var defaultControls:Array = ["width", "height", "rotation", "zIndex"];
+				var defaultBindingVariables:Object = {width:"width", height:"height", rotation:"theRotation", text:"text", zIndex:"zIndex"};
+				
+				this._targetProperties = {width:"value", height:"value", rotation:"value", text:"text", zIndex:"value"};
+				
+				if (enabledControls) this._enabledControls = enabledControls;
+				else this._enabledControls = defaultControls;
+				
+				if (bindingVariables) this._bindingVariables = bindingVariables;
+				else this._bindingVariables = defaultBindingVariables;
+				
+				this.target = targetObject;
+				
+			}
+			
+			protected function _initCCHandler(event:FlexEvent)
+			{
+			/*	for each (var controlName:String in _enabledControls) {
+					BindingUtils.bindProperty(this[controlName+"Control"], _targetProperties[controlName], target, _bindingVariables[controlName]);
+					this[controlName+"Control"].addEventListener(SliderEvent.CHANGE, this["_"+controlName+"ChangeHandler"]);
+					this[controlName+"Control"].visible = true;
+					this[controlName+"Label"].visible = true;
+				}
+				//BindingUtils.bindProperty(rotationControl, "value", target, "rotation");
+				BindingUtils.bindProperty(this.positionX, "text", target, "x");
+				BindingUtils.bindProperty(this.positionY, "text", target, "y");*/
+			}
+			
+			
+			protected function _mouseDownHandler(event:MouseEvent)
+			{
+				Application.application.stage.addEventListener(MouseEvent.MOUSE_UP, this._mouseUpHandler);
+			}
+			
+			
+			protected function _mouseUpHandler(event:MouseEvent)
+			{
+				this.target.theMovie.captureAssetAtCurrentFrame(this.target);
+				
+				Application.application.stage.removeEventListener(MouseEvent.MOUSE_UP, this._mouseUpHandler);
+			}
+			
+			protected function _changeHandler(event:Event)
+			{
+				var properties:Object = new Object;
+				properties[event.target.name] = event.target.value;
+				this.target.setProperties(properties);
+			}
+			
+			protected function _widthChangeHandler(event:Event) {
+				this._changeHandler(event);
+			}
+			
+			protected function _heightChangeHandler(event:Event) {
+				this._changeHandler(event);
+			}
+			
+			protected function _rotationChangeHandler(event:Event) {
+				var properties:Object = new Object;
+				properties[event.target.name] = event.target.value;
+				//properties.x = event.target.parent.target.x;
+				//properties.y = event.target.parent.target.y;
+				this.target.setProperties(properties);
+			}
+			
+			protected function _zIndexChangeHandler(event:Event) {
+				target.changeZIndex(event.target.value);
+			}
+			
+			protected function _textChangeHandler(event:Event) {
+				var properties:Object = new Object;
+				properties[event.target.name] = event.target.text;
+				this.target.setProperties(properties);
+			}
+			
+			// keep the key down from propagating up - specifically to keepthe delete button from 
+			// deleting an asset on the stage
+			protected function _keyDownHandler(event:Event) {
+				event.stopPropagation();
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:TextArea x="8" y="316" width="275" name="text" height="74" id="textControl" keyDown="_keyDownHandler(event);" visible="false" />
+	<mx:Label x="9" y="286" text="Text" width="60" visible="false" id="textLabel" />
+	<mx:Label x="28" y="529" id="positionX" />
+	<mx:Label x="87" y="530" id="positionY"/>
+	
+</mx:Canvas>

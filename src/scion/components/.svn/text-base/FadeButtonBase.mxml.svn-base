@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initCCHandler(event);" click="clickHandler(event);" 
+	rollOut="rollOutHandler(event);" rollOver="rollOverHandler(event);" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+	
+			/**
+			 * Button made from an image and label. Is faded except when rolled over or down. Couldn't use the Button
+			 * component for this because the button component label strangely enough will only take a bold font.
+			 */
+		
+			public var activeStateOn:Boolean = false;
+			protected var fadeOn:Boolean;
+			public var onlyFadeIcons:Boolean = false;
+			public var onlyHighlightOnRollover:Boolean = false;
+			
+			public var fadeAlpha:Number = .5;
+			public var fullAlpha:Number = 1;
+			
+			protected var currentFadeAlpha:Number;
+			protected var mouseOver:Boolean;
+			
+			protected var rollOutAfterMouseClick:Boolean;
+			
+
+			function initCCHandler(event:Event) {
+				if (activeStateOn) {
+					unFade();
+				} else {
+					fade();
+				}
+			}
+			
+			public function activate() {
+				//trace("active");
+				activeStateOn = true;
+				if (!onlyHighlightOnRollover) unFade();
+				//if (! onlyHighlightOnRollover) unFade();
+			
+				invalidateDisplayList();
+			}
+			
+			public function deactivate(force:Boolean=false) {
+				//trace("deactive");
+				activeStateOn = false;
+				if (! mouseOver || force) {
+					fade();
+				}
+				invalidateDisplayList();
+			}
+			
+			
+			function clickHandler(event:Event) {
+				rollOutAfterMouseClick = true;
+			}
+		
+			function rollOverHandler(event:Event) {
+				//trace("rollover");
+				mouseOver = true;
+				unFade();
+			}
+			
+			function rollOutHandler(event:MouseEvent) {
+				if (rollOutAfterMouseClick) {
+					rollOutAfterMouseClick = false;
+					return;
+				}
+			
+				//trace("rollout");
+			
+				// check to see if the mouse actually rolled out, as this gets called
+				// after a mouse click for some reason
+				/*if (event.target.mouseX<0 || event.target.mouseY<0 || event.target.mouseX>=event.target.width || event.target.mouseY>=event.target.height){
+					mouseOver = false;
+					if ((! activeStateOn) || onlyHighlightOnRollover ) {
+						fade();
+					}
+				}*/
+				mouseOver = false;
+				if ((! activeStateOn) || onlyHighlightOnRollover ) {
+					fade();
+				}
+			}
+			
+			function fade() {
+				//trace("fade");
+				doFade(fadeAlpha);
+				fadeOn = true;
+			}
+			
+			function unFade() {
+				//trace("unfade");
+				doFade(fullAlpha);
+				fadeOn = false;
+			}
+			
+			function doFade(alpha) {
+				currentFadeAlpha = alpha;
+				if (! onlyFadeIcons) {
+					this.alpha = alpha;
+				}
+				invalidateDisplayList();
+			}
+			
+			
+		]]>
+	</mx:Script>
+
+</mx:Canvas>

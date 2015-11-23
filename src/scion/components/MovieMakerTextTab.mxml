@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MovieMakerTab xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="685" height="149" verticalScrollPolicy="off" horizontalScrollPolicy="off" creationComplete="initCCHandler(event);">
+	
+	<mx:Script>
+		<![CDATA[
+			import movie.assets.ScionTextFXAssetInstance;
+			
+			import flash.events.KeyboardEvent;
+			import flash.events.Event;
+			import movie.movie.Movie;
+			import movie.movie.MovieEvent;
+			import mx.core.Application;
+			import mx.events.FlexEvent;
+			
+			protected var targetAsset:ScionTextFXAssetInstance;
+			protected var displayIntroText:Boolean = true;
+			
+			/**
+			 * Register an ASSET_SELECTED listener on the movie, so we can keep track of
+			 * the currently selected text field
+			 */
+			function initCCHandler(event:Event) {
+				Application.application.addEventListener(FlexEvent.APPLICATION_COMPLETE, applicationCompleteHandler);
+			}
+			
+			function applicationCompleteHandler(event:Event) {	
+				Movie.movie.stage.addEventListener(MovieEvent.ASSET_SELECTED, assetSelectedHandler, true);
+				resetTextField();
+			}
+			
+			
+			/**
+			 * If the asset is a ScionFxText, then set the target for the text field.
+			 */
+			function assetSelectedHandler(event:Event) {
+				
+				if (event.target.asset.type=="ScionTextFX") {
+				//if (false) {
+					targetAsset = event.target.asset as ScionTextFXAssetInstance;
+					//var theText = targetAsset.fxText;
+					if (!displayIntroText && (targetAsset.fxText==null || targetAsset.fxText=="")) {
+						targetAsset.fxText = textFxText.text;
+					} else {
+						targetAsset.initialSelect = false;
+					}
+					resetTextField();
+				}
+			}
+				
+				
+			
+			function submitButtonClickHandler(event:Event)
+			{
+				if (targetAsset) {
+					targetAsset.fxText = textFxText.text;
+				}
+			}
+			
+			function keyPressedHandler(event:KeyboardEvent)
+			{
+				 if (event.charCode==13) {
+				 	submitButtonClickHandler(event); 
+				 }
+				 
+				 event.stopImmediatePropagation();
+			}
+			
+			
+			function fxTextClickHandler(event:Event) {
+				
+				// remove the red intro text if there is any
+				// horrible to do this by the color value - he he
+				if (displayIntroText) {
+					textFxText.text = "";
+					textFxText.setStyle("color", "#656565");
+					displayIntroText = false;
+				}
+			}
+			
+			
+			function resetTextField() {
+				if (targetAsset==null || targetAsset.fxText==null || targetAsset.fxText=="") {
+					setTextFieldIntro();
+				} else {
+					setTextFieldToTarget();
+				}
+			}
+			
+			function setTextFieldIntro() {
+				displayIntroText = true;
+				textFxText.text = "Enter text here and select an effect";
+				textFxText.setStyle("color", "#D03B1E");
+			}
+			
+			function setTextFieldToTarget() {
+				displayIntroText = false;
+				textFxText.text = targetAsset.fxText;
+				textFxText.setStyle("color", "#656565");
+			}
+			
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Label x="-2" y="8" fontSize="18" text="Choose your display and enter your text" visible="false" />
+	<mx:Label x="300" y="12" fontSize="14" color="#0084FF" text="Add the copy you want to be used in the Motionfx overlay layer." visible="false" />
+	<ScrollHBox x="0" y="35" width="540" height="111" horizontalGap="4" id="assetListContainer" horizontalScrollPolicy="auto" />
+	
+	<mx:Text x="395" y="37" width="270" visible="false" text="Don’t forget you can move your text or use the scale and rotate tool to animate your text over time." />
+	
+	<mx:TextInput id="textFxText" keyDown="keyPressedHandler(event);" click="fxTextClickHandler(event);" change="submitButtonClickHandler(event);" editable="true" width="400" height="24" x="3" y="7" color="#D03B1E" fontSize="16" text="Enter text here and select an effect"  />
+	<!--<FadeButton click="submitButtonClickHandler(event);" id="submitButton" x="598" y="111" width="63" height="27" backgroundColor="#D03B1E" borderStyle="solid" borderThickness="1" borderColor="#5B1D11" labelText="Submit" labelX="3" labelY="1" fontSize="16" />
+	-->
+	
+</MovieMakerTab>

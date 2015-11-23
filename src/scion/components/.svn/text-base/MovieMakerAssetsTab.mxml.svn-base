@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MovieMakerTab xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="685" height="149" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:Label x="-4" y="8" fontSize="18" text="Pick your fx" visible="false" />
+	<mx:Label x="-4" y="28" fontSize="14" color="#0084FF" visible="false" text="Preview and select your MOTIONfx graphics and begin to build your movie." />
+	<mx:HBox x="0" y="57" width="685" height="111" horizontalGap="4" id="assetListContainer" />
+	
+</MovieMakerTab>

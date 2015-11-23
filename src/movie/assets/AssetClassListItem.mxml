@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AssetButton xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="123" height="83" creationComplete="initCCHandler(event);" click="mouseClickHandler(event);">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			/**
+			 * The mouse handling functionality was commented out for the Scion project. I should have
+			 * overridden this class instead.
+			 */
+		
+			import flash.events.MouseEvent;
+			import mx.core.Application;
+			
+			public var asset:AssetClass;
+
+			function constructor(asset:AssetClass)
+			{
+				
+				this.asset = asset;
+				super.buttonConstructor(asset.name, asset.type, asset.thumbnail, asset.thumbnailRoll, asset.buttonProperties);
+				//this.thumbnail = asset.thumbnail;
+				
+				//if (asset.thumbnailRoll) thumbnailRoll = asset.thumbnailRoll;
+			}
+			
+			
+			function initCCHandler(event:Event) {
+				//addEventListener(MouseEvent.MOUSE_CLICK, mouseClickHandler);
+			}
+			
+			
+			function mouseClickHandler(event:MouseEvent) {
+				
+				// add the asset to the movie
+				// call the addToMovie function on the initiator
+	            //var assetListItem:AssetClassListItem = AssetClassListItem(event.dragInitiator);
+	            //var movieAsset:AssetClass = assetListItem.asset;
+	            asset.addToMovie(Application.application.theMovie, event.localX, event.localY);
+			}
+			
+			
+			/*
+			public function mouseMoveHandler(event:MouseEvent):void
+			{
+				
+				//Alert.show("hello");
+				
+				// Get the drag initiator component from the event object.
+	            var dragInitiator:AssetClassListItem = AssetClassListItem(event.currentTarget);
+	            
+	            // Create a DragSource object.
+	            var ds:DragSource = new DragSource();
+	
+	            // Add the data to the object.
+	            //ds.addData(this, 'MovieAsset');
+	
+	            // Call the DragManager doDrag() method to start the drag. 
+	            DragManager.doDrag(dragInitiator, ds, event);
+			}
+			
+			
+			protected function rollOverHandler(event:Event) {
+				
+				if (thumbnailRoll) imageCmp.source = thumbnailRoll;
+			}
+			
+			protected function rollOutHandler(event:Event) {
+				if (thumbnail) imageCmp.source = thumbnail;
+			}*/
+	
+			
+		]]>
+	</mx:Script>
+</AssetButton>

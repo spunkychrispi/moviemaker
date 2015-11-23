@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="scion.components.*" width="745" height="55" creationComplete="initCCHandler(event);" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			
+		
+			[Embed('/assets/showControls_button.png')]
+			[Bindable]
+			var showControlsIcon:Class;
+			
+			[Embed('/assets/hideControls_button.png')]
+			[Bindable]
+			var hideControlsIcon:Class;
+			
+			function initCCHandler(event:Event) {
+				
+				// draw the bottom background that is always visible
+				graphics.beginFill(0x000000, .6);
+				graphics.drawRect(0, 29, 745, 26);
+				graphics.endFill(); 
+			}
+			
+			function showControlsClick(event:Event) {
+				if (! showControlsButton.activeStateOn) {
+					playerControls.visible = true;
+					showControlsButton.activate();
+				} else {
+					playerControls.visible = false;
+					invalidateDisplayList();
+					showControlsButton.deactivate();
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" />
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" />
+	
+	<ns1:MoviePlayerControls id="playerControls" x="0" y="0" visible="false" hideEffect="{fadeOut}" showEffect="{fadeIn}" />
+	
+	<mx:Label x="591" y="32" text="Player Controls" fontSize="16" />
+	<ns1:ShowControlsButton id="showControlsButton" styleName="playerControlButton" x="707" y="34" width="17" height="17"  click="showControlsClick(event);" />
+	
+	
+	
+	
+</mx:Canvas>

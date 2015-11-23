@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Label xmlns:mx="http://www.adobe.com/2006/mxml" text="Whatever!!" height="100" width="100" color="#555555" x="100" y="100">
+
+	<mx:Script>
+		<![CDATA[
+			public var asset:AssetInstance;
+		]]>
+	</mx:Script>
+	
+</mx:Label>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FadeButton xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="25" height="25" click="rewindButtonClickHandler(event);" onlyFadeIcons="true" onlyHighlightOnRollover="true" imageX="-1">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import movie.movie.Movie;
+			
+			[Embed('/assets/rewind_button.png')]
+			var rewindButtonIcon:Class;
+
+			function rewindButtonClickHandler(event:Event) {
+				Movie.movie.stop();
+				Movie.movie.goToFrame(1);
+				Movie.movie.playCurrentFrame();
+				Movie.movie.play();
+			}
+			
+			override protected function updateDisplayList(w:Number, h:Number):void
+			{
+				graphics.clear();
+				
+				graphics.beginFill(0x000000, .3);
+				graphics.drawRect(0, 0, w, h);
+
+				graphics.beginFill(0xFFFFFF, currentFadeAlpha);
+				var vertices:Vector.<Number> = new Vector.<Number>();
+				vertices.push(20, 8, 20, 16, 13, 12, 14, 8, 14, 16, 7, 12);
+				graphics.drawTriangles(vertices);
+				
+				graphics.drawRect(6, 8, 2, 8);
+				graphics.endFill();
+
+					
+				// draw the border
+				//graphics.lineStyle(1, 0xFFFFFF, 1, false);
+				//graphics.drawRect(0, 0, w, h);
+					
+				super.updateDisplayList(w,h);
+			}
+		]]>
+	</mx:Script>
+	
+</FadeButton>

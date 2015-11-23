@@ -1,0 +1,172 @@
+package movie.assets
+{
+		/* Old version of the swf before we switched to using the Loader to load the swfs - NOT CURRENTLY USED */
+	import flash.events.Event;
+	import flash.utils.getQualifiedClassName;
+	
+	import movie.movie.MovieEvent;
+	import movie.movie.Movie;
+	
+	import mx.core.Application;
+	import mx.events.*;
+	
+	public class SWFAssetInstance extends AssetInstance
+	{
+		
+		protected var _isPlaying:Boolean;
+		protected var movieIsControllable:Boolean;
+		
+		public var text; 	// dummy variable so the widget binding works
+		
+		public function SWFAssetInstance(name:String, properties:Object, assetClass:AssetClass)
+		{
+			this.type = "SWF";
+			this._tweenPropertiesList = ["centerX", "centerY", "width", "height", "rotation"];
+			this._statePropertiesList = ["centerX", "centerY", "width", "height", "rotation"];
+			
+			widgetControls = ["width", "height", "rotation", "text"];
+			
+			super(name, properties, assetClass);
+
+			//assetCmpnt.addEventListener(FlexEvent.CREATION_COMPLETE, assetLoadedHandler);
+			
+			//assetCmpnt.addEventListener(ProgressEvent.PROGRESS, assetLoadedHandler);
+			//assetCmpnt.addEventListener(FlexEvent.UPDATE_COMPLETE, assetLoadedHandler);
+			
+			// Currently, if this asset has been created before, the assetCmpnt with the loaded
+			// swf will be saved in loadedData. This really should just be the swf itself, but 
+			// haven't been able to get that work well. So using assetCmpnt for the moment
+			if (properties.loadedData) {
+				//assetCmpnt.source = properties.loadedData;
+				assetCmpnt = properties.loadedData;
+				
+				//assetCmpnt.addEventListener(FlexEvent.INITIALIZE, assetInitHandler);
+				addEventListener(FlexEvent.INITIALIZE, assetInitHandler);
+				
+			} else {
+				assetCmpnt = new SWFAssetInstanceCmpnt();
+				assetCmpnt.addEventListener(Event.INIT, assetInitHandler);
+				
+				//assetCmpnt.source = properties.assetPath;
+				trace("frame rate pre swf load: " + Movie.movie.frameRate);
+				assetCmpnt.load(properties.assetPath);
+				Application.application.showProgressBar(assetCmpnt);
+			}
+		}
+		
+		/**
+		 * This function is important when playing swfs before they have finished loading - that
+		 * way you can do the property handling before the UPDATE_COMPLETE event. Currently, the 
+		 * movie doesn't play until the asset is fully loaded, so this is not as useful - could probably
+		 * all be moved to assetLoadedHandler.
+		 */
+		protected function assetInitHandler(event:Event) {
+			
+			trace("frame rate post swf load: " + Movie.movie.frameRate);
+			
+			var movieType:String = getQualifiedClassName(assetCmpnt.content);
+			
+			if (movieType!="flash.display::AVM1Movie") {
+				movieIsControllable = true;
+			} else {
+				movieIsControllable = false;
+			}
+			
+			if (movieIsControllable) {
+				Application.application.theStage.addEventListener(MovieEvent.MOVIE_STOP, this._stopHandler);
+			}
+			
+			/* If we already have the content object and can get width and height from it, then
+				call the super assetLoadedHandler - this means the content is a MovieClip.
+				Otherwise, set the updateComplete handler - we'll have to get the width and
+				height when the asset has completely loaded.
+			*/
+			
+			if (assetCmpnt.content && assetCmpnt.content.width) {
+				width = assetCmpnt.content.width;
+				height = assetCmpnt.content.height;
+				//super.assetLoadedHandler(event);
+			} else {
+				//assetCmpnt.addEventListener(FlexEvent.UPDATE_COMPLETE, assetLoadedHandler);
+			}
+			
+			// now we are completely loading the swf before playing, either way, so the above
+			// no long is applicable
+			// UPDATE_COMPLETE gets called before the content is actually laoded
+			// so call COMPLETE instead
+			//assetCmpnt.addEventListener(FlexEvent.UPDATE_COMPLETE, assetLoadedHandler);
+			assetCmpnt.addEventListener(Event.COMPLETE, assetLoadedHandler);
+			
+			// if the loaded data was given to us, the asset is already loaded
+			if (_constructorProperties.loadedData) {
+				//assetCmpnt.dispatchEvent(new FlexEvent(FlexEvent.UPDATE_COMPLETE));
+				assetCmpnt.dispatchEvent(new Event(Event.COMPLETE));
+			}
+		}
+		
+		
+		protected override function assetLoadedHandler(event:Event=null) {
+			
+			//assetClass.loadedData = assetCmpnt.content;
+			// attach the data to the asset class so that if the class has to create
+			// another asset, the data will not have to be loaded again
+			// but if this is the movie viewer and not the creator, there will be no asset
+			// class
+			if (assetClass) {
+				assetClass.loadedData = assetCmpnt;
+			}
+			
+			super.assetLoadedHandler(event);
+		}
+		
+		
+		protected function _stopHandler(event:MovieEvent)
+		{
+			this.assetCmpnt.content.gotoAndStop(event.currentFrame);
+			this._isPlaying = false;
+		}
+		
+		
+		public override function get duration():Number {
+			
+			if (assetLoaded && assetCmpnt.content.totalFrames) {
+				return assetCmpnt.content.totalFrames / Movie.movie.frameRate;
+			} else {
+				return 0;
+			}
+		}
+		
+		
+		public override function setProperties(properties:Object, currentFrame:int=undefined) 
+		{
+			
+			if (this.theMovie && movieIsControllable) {	
+				trace(currentFrame);
+				if (this.theMovie.isPlaying) 
+				{
+					// we need the isPlaying flag, because we don't want to start the sound again if it's already playing
+					if (! this._isPlaying)
+					//if (true)
+					{
+						this.assetCmpnt.content.gotoAndPlay(currentFrame);
+						this._isPlaying = true;
+					} 
+					
+				} else {
+					this.assetCmpnt.content.gotoAndStop(currentFrame)
+					
+				}
+			}
+			
+			super.setProperties(properties, currentFrame);
+		}
+		
+		
+		/*protected override function _mouseDownHandler(event:MouseEvent):void {
+			
+			event.stopImmediatePropagation();
+			super._mouseDownHandler(event);
+			
+		}*/
+	}
+}

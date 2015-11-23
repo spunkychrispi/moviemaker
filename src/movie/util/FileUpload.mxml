@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="200" height="90" horizontalScrollPolicy="off">
+
+	<mx:Script>
+		<![CDATA[
+	
+	        /* filerereference sends bytearray data to loader component */
+	        
+	   	import mx.controls.Button;
+        import flash.events.MouseEvent;
+        import flash.net.FileReference;
+        import flash.net.FileFilter;
+        import flash.utils.ByteArray;
+        import flash.events.MouseEvent;
+        import flash.events.Event;
+        import flash.events.IOErrorEvent;
+        import flash.display.MovieClip;
+        import mx.controls.ProgressBarMode;
+        import mx.core.Application;
+        import mx.controls.Alert;
+        
+        import movie.assets.AssetClass;
+ 
+        private var fileReference:FileReference;
+        private var mLoader:Loader;
+        
+        public var fileUploadURL:String;
+ 
+
+ 
+        public function onBrowseButtonClicked(event:MouseEvent):void
+        {
+			//trace("onBrowse");
+			fileReference=new FileReference();
+			fileReference.addEventListener(Event.SELECT, onFileSelected);
+			var swfTypeFilter:FileFilter = new FileFilter("SWF Files (*.swf)","*.swf");
+			var allTypeFilter:FileFilter = new FileFilter("All Files (*.*)","*.*");
+			fileReference.browse([swfTypeFilter, allTypeFilter]);
+        }
+ 
+ 
+       public function onFileSelected(event:Event):void
+       {
+            //trace("onFileSelected");
+            fileReference.addEventListener(Event.COMPLETE, onFileLoaded);
+            fileReference.addEventListener(IOErrorEvent.IO_ERROR, onFileLoadError);
+            fileReference.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+            fileReference.load();
+       }
+ 
+ 
+       private function progressHandler(event:ProgressEvent):void
+       {
+            var file:FileReference = FileReference(event.target);
+            var percentLoaded:Number=event.bytesLoaded/event.bytesTotal*100;
+            //trace("loaded: "+percentLoaded+"%");
+            ProgresBar.mode=ProgressBarMode.MANUAL;
+            ProgresBar.minimum=0;
+            ProgresBar.maximum=100;
+           	ProgresBar.setProgress(percentLoaded, 100);
+        }
+ 
+ 
+        public function onFileLoaded(event:Event):void
+        {
+            var fileReference:FileReference=event.target as FileReference;
+            fileReference.upload(new URLRequest(fileUploadURL));
+        }
+        
+        public function onFileLoadError(event:IOErrorEvent)
+        {
+        	Alert.show("IO error");
+        }
+        	
+		
+		]]>
+	</mx:Script>
+
+	<mx:Button x="10" y="10" id="BrowseButton" name="browseButton"
+           click="onBrowseButtonClicked(event)"/>
+    <mx:ProgressBar x="10" y="40" id="ProgresBar" minimum="1" maximum="100"
+            indeterminate="false" enabled="true" labelPlacement="left" visible="false" />
+	
+</mx:Canvas>

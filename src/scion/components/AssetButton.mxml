@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="123" height="83" useHandCursor="true" buttonMode="true" creationComplete="creationCompleteHandler(event);" click="clickHandler(event);" rollOver="rollOverHandler(event);" rollOut="rollOutHandler(event);" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.core.UIComponent;
+			
+			//[Bindable] 
+			//var theStyleName:String;
+			
+			var selected:Boolean = false;
+			
+			var type:String;
+			
+            [Bindable]
+            var thumbnailClass:*;
+            
+            [Bindable]
+            var rolloverThumbClass:*;
+            
+            [Bindable]
+            var buttonLabel:String;
+            
+            // some asset buttons shouldn't stay selected when you add the asset to the stage
+            var noSelect:Boolean = false;
+            
+            // for no select buttons - the rollout handler gets called after a click, but we only want to unhighlight 
+            // the button when the mouse has actually rolled out.
+            protected var rollOutAfterMouseClick:Boolean;
+            
+            
+            protected function buttonConstructor(buttonLabel:String, type:String, thumbnail:*, rolloverThumb:*, buttonProperties:Object=null) {
+            	this.buttonLabel = buttonLabel;
+            	this.thumbnailClass = thumbnail;
+            	this.rolloverThumbClass = rolloverThumb;
+            	this.type = type;
+            	
+            	for (var prop:String in buttonProperties) {
+            		this[prop] = buttonProperties[prop];
+            	}
+            }
+
+			
+			function creationCompleteHandler(event:Event) {
+				//theStyleName = styleName as String;
+				
+				// draw the border rectangle for the button
+				var square:Shape = new Shape();
+				square.graphics.beginFill(0x0084FF);
+				square.graphics.drawRect(0, 0, 117, 77);
+				
+				// draw the black rectangle that shows before the images load in
+				
+				if (type == 'ScionTextFX') {
+					assetLabel.visible = false;
+					playIcon.visible = false;
+				}
+				
+				var container2:UIComponent = new UIComponent();
+				container2.addChild(square);
+				
+				container2.x = 0;
+				container2.y = 6;
+				
+				addChildAt(container2, 0);
+				
+				// draw the black rectangle that shows before the thumbnail loads in
+				var square:Shape = new Shape();
+				square.graphics.beginFill(0x000000);
+				square.graphics.drawRect(0, 0, 115, 75);
+				
+				// draw the black rectangle that shows before the images load in
+				
+				
+				var container3:UIComponent = new UIComponent();
+				container3.addChild(square);
+				
+				container3.x = 1;
+				container3.y = 7;
+				
+				addChildAt(container3, 1);
+				 
+				if (type != 'ScionTextFX') {
+					// draw the black rectangle for the label
+					var square:Shape = new Shape();
+					square.graphics.beginFill(0x000000);
+					square.graphics.drawRect(0, 0, 109, 13);
+				
+					var container:UIComponent = new UIComponent();
+					container.addChild(square);
+				
+					container.x = 4;
+					container.y = 65;
+				
+					var labelIndex:int = getChildIndex(assetLabel);	
+					addChildAt(container, labelIndex);
+				}
+			}
+			
+			
+			function rollOverHandler(event:Event) {
+				buttonRoll.visible = true;
+				button.visible = false;
+			}
+			
+			
+			function rollOutHandler(event:Event) {
+				if (rollOutAfterMouseClick) {
+					rollOutAfterMouseClick = false;
+					return;
+				}
+				
+				if (! selected) {
+					button.visible = true;
+					buttonRoll.visible = false;
+				}
+			}
+			
+			
+			function clickHandler(event:Event) {
+				rollOutAfterMouseClick = true;
+			}
+		
+			
+			/*function rollOutHandler(event:MouseEvent) {
+				if (rollOutAfterMouseClick) {
+					rollOutAfterMouseClick = false;
+					return;
+				}*/
+			
+			
+			public function select() {
+				buttonRoll.visible = true;
+				button.visible = false;
+				if (! noSelect) {
+					selected = true;
+				}
+			}
+			
+			public function deselect() {
+				button.visible = true;
+				buttonRoll.visible = false;
+				selected = false;
+			}
+		]]>
+	</mx:Script>
+
+	<!--<mx:Button x="1" y="7" width="115" height="75" cornerRadius="0" icon="@Embed('/assets/_BlazingArrows.png')" overIcon="@Embed('/assets/_BlazingArrowsROLL.png')" />-->
+	
+	<mx:Image x="1" y="7" width="115" height="75" id="button" source="{thumbnailClass}" />
+	
+	<mx:Image x="1" y="7" width="115" height="75" id="buttonRoll" source="{rolloverThumbClass}" visible="false" />
+	
+	<mx:Label x="4" y="63" width="109" height="13" id="assetLabel" color="#FFFFFF" textAlign="center" text="{buttonLabel.toUpperCase()}" />	
+	
+	<mx:Image x="48" y="25" width="20" height="20" id="playIcon" source="@Embed('/assets/asset_button_play.png')" />
+	
+	<mx:Image x="110" y="0" width="13" height="13" source="@Embed('/assets/asset_button_plus.png')" />
+	
+	
+	
+</mx:Canvas>

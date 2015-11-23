@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MovieMakerTab xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="685" height="149" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import mx.core.Application;
+		
+			private function dataChangeHandler(event:Event) {
+        		Application.application.theMovie.setFXText(text1.text);
+        		//ScionFXAssetInstance.FXText = event.target.text;
+        	}
+        	
+		]]>
+	</mx:Script>
+	
+	<mx:Label x="-4" y="8" fontSize="18" text="Enter your text" />
+	<mx:Label x="-4" y="28" fontSize="14" color="#0084FF" text="Add the copy you want to be used in theMotionfx overlay layer." />
+	
+	<mx:TextInput id="text1" width="396" height="24" x="0" y="60" color="#D03B1E" fontSize="16" text="Enter your text..." click="textClickHandler(event, text1);" borderColor="#000000" borderStyle="solid" borderThickness="1" />
+	<mx:Label y="60" x="380" fontSize="16" color="#D03B1E" text="1" alpha=".5" />
+	<mx:TextInput id="text2" width="396" height="24" x="0" y="88" color="#D03B1E" fontSize="16" text="Enter your text..." click="textClickHandler(event, text2);" borderColor="#000000" borderStyle="solid" borderThickness="1" />
+	<mx:Label y="88" x="380" fontSize="16" color="#D03B1E" text="2" alpha=".5" />
+	<mx:TextInput id="text3" width="396" height="24" x="0" y="116" color="#D03B1E" fontSize="16" text="Enter your text..." click="textClickHandler(event, text3);" borderColor="#000000" borderStyle="solid" borderThickness="1" />
+	<mx:Label y="116" x="380" fontSize="16" color="#D03B1E" text="3" alpha=".5" />
+	
+	<FadeButton x="551" y="59" width="109" height="43" click="dataChangeHandler(event);" backgroundColor="#D03B1E" borderStyle="solid" borderThickness="1" borderColor="#5B1D11" labelText="Submit" labelY="4" labelX="15" fontSize="22" />
+
+</MovieMakerTab>

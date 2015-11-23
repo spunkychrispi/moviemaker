@@ -1,0 +1,26 @@
+3rd party classes:
+
+co.uk.mikestead - urlvariable+ classes for create multipart requests
+com.adobe - library for jpg encoder
+
+
+
+
+test cases for frame tweening:
+getObjectsMostRecentKeyFrame - there is no previous key frame
+
+getStateProperty - doesn't retrieve a state
+
+property doesn't exist in one of the keyframes
+property is 0 in one of the tween frames
+
+
+errors to catch - going to a frame that doesn't exist
+
+
+TODO:
+
+audio - check for movie stop event
+
+
+image smoothing on resize

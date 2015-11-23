@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="scion.components.*">
+
+	<mx:Script>
+		<![CDATA[
+		
+			import scion.controller.MovieController;
+			import mx.core.Application;
+			import movie.util.ErrorHandler;
+			import com.adobe.serialization.json.JSON;
+			import mx.events.ValidationResultEvent;
+			import google.analytics.EventTracker;
+		
+			/**
+			 * Compile the form data and send to the movie controller.
+			 */
+			protected function submitMovieSaveHandler(event:Event)
+			{
+				EventTracker.trackEvent('Movie Maker', 'Save');
+				
+				if (! userName.text) {
+					userName.setFocus();
+					alertError("Did you forget something?", "Please enter your name");
+					return;
+				}
+				
+				if (! email.text) {
+					email.setFocus();
+					alertError("Did you forget something?", "Please enter your email");
+					return;
+				}
+				
+				if (! title.text) {
+					title.setFocus();
+					alertError("Did you forget something?", "Please enter a title for your video");
+					return;
+				}
+				
+				if (! description.text) {
+					description.setFocus();
+					alertError("Did you forget something?", "Please enter a short description of your video.");
+					return;
+				}
+				
+				emailValidator.validate(email.text);
+			}
+		
+			
+		function alertError(title:String, message:String) 
+		{
+			// pop open the alert to cover the entire component, sans the lefthand tab
+			
+			var properties:Object = new Object;
+			properties.x = x;
+			properties.y = y;
+			properties.width = width;
+			properties.height = height;
+			
+			ErrorHandler.alertError(title, message, "Go Back", properties, "saveAlert");
+		}
+			
+			
+			/**
+			 * Submit the form
+			 */
+			private function validEmailHandler(evt:ValidationResultEvent):void {
+				
+				var data:Object = new Object();
+				
+				data.name = userName.text;
+				data.email = email.text;
+				data.title = title.text;
+				data.description = description.text;
+				
+				MovieController.controller.saveMovie(data);
+				visible = false;
+				//testMovieSaveHandler(data);
+			}
+			
+			
+
+            private function invalidEmailHandler(evt:ValidationResultEvent):void {
+                alertError("Did you forget something?", "Please enter a valid email.");
+            }
+
+           
+			
+			
+		protected function testMovieSaveHandler(metaProperties:Object) {
+			
+			// now that the files are uploaded and we have the assetPaths saved to the assets
+			// we can save the movie data
+	
+			var url:String = Application.application.server+"/movie/save";
+			var variables:URLVariables = new URLVariables();
+			//variables.id = movieID;
+			variables.id = metaProperties.name;
+			
+			// add the metaProperties to the variables
+			for (var propertyName:String in metaProperties) {
+				variables[propertyName] = metaProperties[propertyName]
+			}
+			
+			var request:URLRequest = new URLRequest(url);
+			//var header:URLRequestHeader = new URLRequestHeader("Content-type", "application/octet-stream");
+			//request.requestHeaders.push(header);
+			request.method = URLRequestMethod.POST;
+			request.data = variables;
+			
+			var loader:URLLoader = new URLLoader();
+			//loader.dataFormat = URLLoaderDataFormat.VARIABLES;
+			loader.addEventListener(Event.COMPLETE, saveMovieCompleteHandler);
+			
+			try {
+            	loader.load(request);
+            } catch (error:Error) {
+            	trace("Unable to dispatch load request: " + error);
+            } 
+  		}
+  		
+  		
+  		protected function saveMovieCompleteHandler(event:Event) {
+  			var loader:URLLoader = event.target as URLLoader;
+			var returnProps:Object = JSON.decode(loader.data);
+			
+			if (returnProps.success) {
+  				//trace("movie saved!");
+  				//trace("MovieID: ");
+  				ErrorHandler.alertInfo("movie saved: ");
+  			} else {
+  				ErrorHandler.alertInfo("movie not saved");
+ 			}
+  		}
+  		
+  		
+  		function keyPressedHandler(event:KeyboardEvent)
+			{
+				 event.stopImmediatePropagation();
+			}
+			
+		function clickHandler(event:Event)
+			{
+				visible = false;
+			}
+				
+		]]>
+	</mx:Script>
+
+    	<mx:EmailValidator id="emailValidator"
+            valid="validEmailHandler(event);"
+            invalid="invalidEmailHandler(event);" />
+            
+       	
+		<ns1:FadeButton click="clickHandler(event);" imageClass="@Embed('/assets/form_close_btn.png')" 
+				width="14" height="13" x="335" y="10" fadeAlpha="1" />
+
+
+		<mx:Label text="Submit your MotionFX video " styleName="formHeader" top="10" horizontalCenter="0" />
+
+		<mx:Form y="20" defaultButton="{mySubmitButton}" left="10" right="10" top="27">
+			
+			<mx:FormItem label="Your Name" required="true">
+			    <mx:TextInput id="userName" width="200" maxChars="50" keyDown="keyPressedHandler(event);" />
+			</mx:FormItem>
+			
+			<mx:FormItem label="Email" required="true">
+			    <mx:TextInput id="email" width="200" maxChars="50" keyDown="keyPressedHandler(event);" />
+			</mx:FormItem>
+			
+			<mx:FormItem label="Video Title" required="true">
+			    <mx:TextInput id="title" width="200" maxChars="50" keyDown="keyPressedHandler(event);" />
+			</mx:FormItem>
+			
+			<mx:FormItem label="Video Description" required="true">
+			    <mx:TextArea id="description" width="200" height="100" maxChars="200" keyDown="keyPressedHandler(event);" />
+			</mx:FormItem>
+
+			<mx:FormItem>
+				<ns1:FadeButton name="mySubmitButton" styleName="formHeader" click="submitMovieSaveHandler(event);" width="80" height="25" backgroundColor="#D03B1E" borderStyle="solid" borderThickness="1" borderColor="#5B1D11" labelText="Submit" labelY="-2" labelX="8"  />
+			</mx:FormItem>	
+		</mx:Form>
+		
+		<mx:Button id="mySubmitButton" label="Save" click="submitMovieSaveHandler(event);" visible="false" />
+
+</mx:Canvas>

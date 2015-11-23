@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MovieMakerTab xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="685" height="149" creationComplete="initCCHandler(event);" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			import scion.movie.ScionMovie;		     
+		    import flash.net.FileReference;
+			import mx.core.Application;
+			
+			import org.audiofx.mp3.MP3FileReferenceLoader;
+			import org.audiofx.mp3.MP3SoundEvent;
+			
+			import movie.assets.AudioAssetInstanceCreator;
+			import movie.assets.AudioAssetInstance;
+			import movie.assets.AssetEvent;
+			import scion.util.ScionErrorHandler;
+			
+			import mx.containers.ViewStack;
+			
+			import movie.movie.Movie;
+			import movie.movie.MovieEvent;
+			import scion.movie.ScionMovieEvent;
+		
+			private var loader:MP3FileReferenceLoader;
+			private var fileReference:FileReference;
+			var creator:AudioAssetInstanceCreator;
+			
+			public function initCCHandler(event:Event)
+			{
+				fileReference=new FileReference();
+				fileReference.addEventListener(Event.SELECT, fileSelectedHandler);
+				fileReference.addEventListener(Event.CANCEL, fileCancelHandler);
+				
+				Application.application.addEventListener(MovieEvent.MOVIE_CREATED, movieCreatedHandler);
+			}
+			
+			
+			function movieCreatedHandler(event:Event) {
+			
+				Application.application.theMovie.addEventListener(ScionMovieEvent.AUDIO_ASSET_ADDED, audioAddedHandler);
+			}
+			
+			function audioAddedHandler(event:Event=null) {
+				audioDeleteButton.visible = true;
+			}
+			
+			
+			public function browseButtonClickHandler(ev:MouseEvent):void
+			{
+				browseButton.activate();
+				fileReference.browse([new FileFilter("mp3 files","*.mp3")]);
+			}
+			
+			public function fileCancelHandler(event:Event) {
+				browseButton.deactivate();
+			}
+			
+			function fileSelectedHandler(event:Event) {
+				audioText.setStyle("color", "#656565");
+	     		audioText.text = fileReference.name;
+	     		browseButton.deactivate();
+	     	}
+	     
+		    function uploadButtonClickHandler(event:MouseEvent) {
+		     	if (! rightsCheckbox.selected) {
+		     		ScionErrorHandler.makerAlert("Forgot to check the box?", "Please verify that you have the right to upload your assets", "Go Back");
+		     		//ErrorHandler.alertError("Please check the box to confirm you have audio rights and have read the terms and conditions of use.", "This is the title.");
+		     	} else {
+		     		Application.application.showProgressBar(null, "loading audio", true, false);
+		     		creator = new AudioAssetInstanceCreator("ScionAudio");
+		     		creator.addEventListener(AssetEvent.ASSET_CREATED, assetCreatedHandler);
+		     		
+		     		try {
+		     			creator.createInstanceFromFileReference(fileReference);
+		     		} catch (e:Error) {
+		     			Application.application.hideProgressBar();
+		     			ScionErrorHandler.makerAlert("Did you browse to a file?", "Please browse to an mp3 file", "Go Back");
+		     		}
+		     	}		     
+		     }
+		     
+		     
+		     function assetCreatedHandler(event:Event) {
+		     	
+		     	// deselect the canned asset, if it was selected
+		     	// this shouldn't be in the Application level!
+		     	Application.application.audioAssetList.deselectItems();
+		     	
+		     	Application.application.hideProgressBar();
+		     	var audioAsset:AudioAssetInstance = event.target.asset;
+				Application.application.theMovie.addAssetToMovie(audioAsset.name, audioAsset);
+		     }
+		     
+		     
+		     function cannedAssetsClickHandler(event:Event) {
+		     	ViewStack(parent).selectedIndex = 2;
+		     }
+		     
+		     
+		     function deleteAudioClickHandler(event:Event) {
+		     	
+		     	var movie:ScionMovie = Movie.movie as ScionMovie;
+		     	if (movie.theAudioAssetInstance!=null) {
+		     			movie.stop();
+		     			movie.goToFrame(0);
+		     			movie.removeAsset(movie.theAudioAssetInstance);
+						movie.theAudioAssetInstance.deleteAsset();
+						movie.theAudioAssetInstance = null;
+						movie.setMovieDuration();
+						
+						audioDeleteButton.visible = false;
+					}
+		     	
+		     	
+		     	
+		     }
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Label x="-4" y="8" fontSize="18" text="Upload your audio file" visible="false" />
+	<mx:Label x="-4" y="28" fontSize="14" color="#0084FF" text="Add your mp3, avi, or wav audio to your movie" visible="false" />
+	
+	<mx:Label x="292" y="10" visible="false" useHandCursor="true" buttonMode="true" mouseChildren="false" id="audioDeleteButton" click="deleteAudioClickHandler(event);" text="Remove Audio" fontSize="14" color="#0084FF" />
+	
+	<mx:TextInput id="audioText" editable="false" width="397" height="24" x="0" y="69" color="#D03B1E" fontSize="16" text="Choose your file." borderColor="#000000" borderStyle="solid" borderThickness="1" />
+	<FadeButton click="browseButtonClickHandler(event);" id="browseButton" x="399" y="69" width="66" height="24" backgroundColor="#0870D0" borderStyle="solid" borderThickness="1" borderColor="#005CB2" labelText="Browse" labelX="3" labelY="-1" fontSize="16" />
+	<mx:CheckBox id="rightsCheckbox" focusAlpha="0" height="13" width="13" x="0" y="112" borderColor="#D03B1E" cornerRadius="0" fillAlphas="[1,1]" fillColors="[#FFFFFF,#FFFFFF]" />
+	<mx:Label x="20" y="109" fontSize="14" text="I have the right to use this audio and have reviewed the terms and conditions for Motion FX." />
+	<FadeButton click="uploadButtonClickHandler(event);" x="478" y="69" width="66" height="24" backgroundColor="#D03B1E" borderStyle="solid" borderThickness="1" borderColor="#5B1D11" labelText="Upload" labelY="-1" labelX="5" fontSize="16" />
+
+	<FadeButtonBase x="472" y="12" click="cannedAssetsClickHandler(event);" activeStateOn="true" useHandCursor="true" buttonMode="true" mouseChildren="false">
+		<mx:Label id="cannedHeading" text="Don't have an audio file?" fontSize="14" />
+		<mx:Image y="6" x="146" width="5" height="9" source="@Embed('/assets/forward_arrow.png')" />
+	</FadeButtonBase>
+
+</MovieMakerTab>

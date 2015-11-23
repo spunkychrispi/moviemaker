@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Label xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initCCHandler(event);">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import movie.movie.Movie;
+			import mx.core.Application;
+			import mx.events.FlexEvent;
+			import movie.movie.MovieEvent;
+			
+			import flash.filters.DropShadowFilter;
+			
+			var movieDuration:int;
+
+			
+			function initCCHandler(event:Event) {
+				Application.application.addEventListener(FlexEvent.APPLICATION_COMPLETE, appCompleteHandler);
+				
+				// Apply the drop shadow filter
+				var shadow:DropShadowFilter = new DropShadowFilter();
+				//shadow.distance = 10;
+				//shadow.angle = 25;
+				filters = [shadow];
+			}
+			
+			
+			function appCompleteHandler(event:Event) {
+				Movie.movie.addEventListener(MovieEvent.MOVIE_DURATION_CHANGE, durationChangeHandler);
+				Movie.movie.addEventListener(MovieEvent.MOVIE_FRAME_CHANGE, frameChangeHandler);
+			}
+			
+
+				
+			function durationChangeHandler(event:Event) {	
+				movieDuration = Math.ceil(Movie.movie.numberOfFrames / Movie.movie.frameRate);
+				updateTimeMeter();
+			}
+			
+			
+			function frameChangeHandler(event:Event) {
+				// maybe only update every second change?
+				updateTimeMeter();
+			}
+			
+			
+			function updateTimeMeter() {
+				var currentMin:int;
+				var currentSec:int;
+				var totalMin:int;
+				var totalSec:int;
+				
+				var minutes:Number = movieDuration / 60;
+				totalMin = Math.floor(minutes);
+				totalSec = movieDuration - (totalMin * 60);
+				
+				var currentDuration:int = Movie.movie.currentFrame / Movie.movie.frameRate;
+				minutes = currentDuration / 60;
+				currentMin = Math.floor(minutes);
+				currentSec = currentDuration - (currentMin * 60);
+				
+				var totalMinS:String = 	totalMin < 10 ? "0"+String(totalMin) : String(totalMin);
+				var totalSecS:String = totalSec < 10 ? "0"+String(totalSec) : String(totalSec);
+				var currentMinS:String = 	currentMin < 10 ? "0"+String(currentMin) : String(currentMin);
+				var currentSecS:String = currentSec < 10 ? "0"+String(currentSec) : String(currentSec);
+					
+				text = currentMinS+":"+currentSecS+"/"+totalMinS+":"+totalSecS;
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Label>

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/source/flex/!svn/ver/2/Scion/src/org/audiofx/mp3
+END
+SoundClassSwfByteCode.as
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/source/flex/!svn/ver/2/Scion/src/org/audiofx/mp3/SoundClassSwfByteCode.as
+END
+ByteArraySegment.as
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/source/flex/!svn/ver/2/Scion/src/org/audiofx/mp3/ByteArraySegment.as
+END
+MP3FileReferenceLoader.as
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/source/flex/!svn/ver/2/Scion/src/org/audiofx/mp3/MP3FileReferenceLoader.as
+END
+MP3SoundEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/source/flex/!svn/ver/2/Scion/src/org/audiofx/mp3/MP3SoundEvent.as
+END
+MP3Parser.as
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/source/flex/!svn/ver/2/Scion/src/org/audiofx/mp3/MP3Parser.as
+END

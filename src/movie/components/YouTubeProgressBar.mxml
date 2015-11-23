@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initCCHandler(event);">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.UIComponent;
+					
+			import mx.core.Application;
+			
+			var youTubePlayer:Object;
+			var bytesPerPixel:Number;
+			var currentProgressBar:Shape;
+			var currentStartBytes:int;
+			var isInitialized:Boolean;
+			
+			var loadedBytesTracker:Number;
+			
+			var startBytes:int;	// values coming from the player
+			var totalBytes:int;
+			var loadedBytes:int;
+			
+			/**
+			 * Flag set when the loadBytes goes to 0. Means the movie is loading at a new place and 
+			 * need to wait for the new startBytes property.
+			 */
+			var needNewStartBytes:Boolean;
+			
+			
+			public var color:int = 0xC9928D;	// youtube progress bar color
+			
+			function initCCHandler(event:Event) {
+				width = 371;
+				height = 13;
+				isInitialized = false;
+				needNewStartBytes = false;
+			}
+			
+			public function set player(player:Object) {
+				this.youTubePlayer = player;
+				bytesPerPixel = 0;
+				
+				Application.application.stage.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+			}
+				
+				
+			/**
+			 * Remove the progress bar pixels and frame change event.
+			 */
+			public function clear() {
+				var size:int = numChildren;
+				for (var x:int=0; x<size; x++) {
+					removeChildAt(0);
+				}
+				currentProgressBar = null;
+				currentStartBytes = 0;
+				isInitialized = false;
+				needNewStartBytes = false;
+				
+				Application.application.stage.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
+			}
+			
+			
+			function enterFrameHandler(event:Event) {
+				
+				/**
+				 * Keep on initializing until the youtube player loads the movie and returns bytesPerPixel.
+				 */
+				//if (! bytesPerPixel) {
+				if (! isInitialized) {
+					doInitialize();
+				}
+				
+				updateProgress();
+			}
+			
+			
+			function doInitialize() {
+				
+				var totalBytes:int = youTubePlayer.getVideoBytesTotal();
+				var loadedBytes:int = youTubePlayer.getVideoBytesLoaded();
+				if (totalBytes && loadedBytes) {
+					isInitialized = true;
+				}
+			}
+			
+			
+			/**
+			 * Set the width of the progress bar shape according to the number of bytes loaded.
+			 */
+			function updateProgress() {
+				
+				startBytes = youTubePlayer.getVideoStartBytes();
+				loadedBytes = youTubePlayer.getVideoBytesLoaded();
+				totalBytes = youTubePlayer.getVideoBytesTotal();
+				//trace("at: "+totalBytes+" " + startBytes + " " + loadedBytes);
+				
+				// loaded bytes will drop to 0 if the movie reloads at a new place
+				// when this happens, we need a new startBytes property before we continue
+				if (! loadedBytes) {
+					needNewStartBytes = true;
+				}
+				
+				if (needNewStartBytes && startBytes!=currentStartBytes) {
+					needNewStartBytes = false;
+				}
+				
+				if (needNewStartBytes) {
+					return;
+				}
+				
+				/**
+				 * If the move reloads at a different place, ie by the user scrubbing the playhead,
+				 * the start bytes will be different, so start a new progress bar shape.
+				 */
+				if (startBytes != currentStartBytes || !currentProgressBar) {
+					// create a new progress bar
+					//trace("creating new progress bar: "+totalBytes+" " + startBytes + " " + loadedBytes);
+					
+					currentProgressBar = createNewProgressBar();
+					currentStartBytes = startBytes;
+					
+					// the position of the new progress bar is relative to the startBytes
+					currentProgressBar.x = startBytes / bytesPerPixel;
+					var uiCmpnt:UIComponent = new UIComponent();
+					uiCmpnt.addChild(currentProgressBar);
+					addChild(uiCmpnt);
+				}
+				
+				// the width of the progress bar is connected to the number of loaded Bytes
+				currentProgressBar.height = 13;
+				currentProgressBar.width = loadedBytes / bytesPerPixel;
+				loadedBytesTracker = loadedBytes;
+			
+			}
+			
+			
+			function createNewProgressBar() {
+				// calculate the bytes per pixel - we can't do this at the beginning
+				// because the total pixel reportage changes with a seek, so we 
+				// have to recalculate every time
+				
+				var realTotalBytes:int = totalBytes + startBytes;
+				bytesPerPixel = realTotalBytes / width;
+				
+				var bar:Shape = new Shape();
+				bar.width = 371;
+				bar.height = 13;
+				bar.graphics.beginFill(color);
+				bar.graphics.drawRect(0, 0, width, height);
+				bar.graphics.endFill();
+			
+				return bar;
+			}
+		]]>
+	</mx:Script>				
+
+</mx:Canvas>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MovieMakerTab xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="685" height="149" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import mx.containers.ViewStack; 
+			public var label2:String;
+			 
+			public var uploadAssetsIndex:int;
+			public var uploadAssetsLabel:String;
+			
+			[Bindable]
+			public var doUploadAssets:Boolean = false;
+			
+			
+			 function youTubeClickHandler(event:Event) {
+		     	ViewStack(parent).selectedIndex = 8;
+		     	youTubeButton.deactivate(true);
+		     }
+		     
+		     
+		     function imagesClickHandler(event:Event) {
+		     	ViewStack(parent).selectedIndex = 7;
+		     	imageButton.deactivate(true);
+		     }
+					
+		]]>
+	</mx:Script>
+	
+	<mx:Label x="258" y="50" fontSize="18" text="OR" />
+	
+	<FadeButton id="imageButton" click="imagesClickHandler(event);" x="30" y="50" width="170" height="24" backgroundColor="#D03B1E" 
+		borderStyle="solid" borderThickness="1" borderColor="#5B1D11" labelText="Upload Image" labelY="-1" labelX="33" fontSize="16" />
+	<FadeButton id="youTubeButton" click="youTubeClickHandler(event);" x="350" y="50" width="170" height="24" backgroundColor="#D03B1E" 
+		borderStyle="solid" borderThickness="1" borderColor="#5B1D11" labelText="Import YouTube Video" labelY="-1" labelX="7" fontSize="16" />
+	
+	
+</MovieMakerTab>

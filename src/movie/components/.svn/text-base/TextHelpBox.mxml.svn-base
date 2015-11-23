@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="scion.components.*" borderThickness="1" 
+	borderStyle="solid" borderColor="#FFFFFF" horizontalScrollPolicy="off" verticalScrollPolicy="off" 
+	backgroundColor="#000000"  backgroundAlpha=".5"
+	width="734" height="85">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import scion.components.FadeButton;
+			import mx.managers.PopUpManager;
+			
+			[Embed('/assets/down_arrow.png')]
+			var downArrowSrc:Class;
+			
+			function clickHandler(event:Event)
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	<ns1:FadeButton click="clickHandler(event);" imageClass="@Embed('/assets/info_close_btn.jpg')" 
+				width="14" height="13" x="708" y="10" fadeAlpha="1" />
+	<mx:Label fontSize="18" text="Liven up your text using these tools" x="4" y="3"/>
+	
+	<mx:Label fontSize="18" text="Use the scale and rotate tools to resize" x="38" y="36"/>
+	<mx:Label fontSize="18" text="and turn your text any way you'd like." x="39" y="54"/>
+	
+	<mx:Label fontSize="18" text="To animate your text, move playhead forward" x="373" y="36"/>
+	<mx:Label fontSize="18" text="and click and drag your text to a new location." x="375" y="55"/>
+	
+	<mx:Image source="{downArrowSrc}" width="22" height="25"  x="13" y="48"/>
+	<mx:Image source="{downArrowSrc}" width="22" height="25"  x="350" y="48"/>
+	
+</mx:Canvas>

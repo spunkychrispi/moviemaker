@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="scion.components.*" mouseEnabled="false" width="745" height="55" creationComplete="initCCHandler(event);" xmlns:ns2="movie.components.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import scion.movie.ScionMovie;
+			import movie.assets.YouTubeAssetInstance;
+			import movie.movie.Movie;
+			import movie.movie.MovieEvent;
+			import mx.events.FlexEvent;
+
+			import mx.core.Application;
+			import scion.movie.ScionMovieEvent;
+			
+			import scion.components.skins.ScrubberSliderTrackLarge;
+			import scion.components.skins.ScrubberSliderThumbLarge;
+
+			public var theScrubber:MovieScrubber;
+			
+			var theMovie:Movie;
+			var movieDuration:Number;
+			
+			[Embed('/assets/slider_thumbLarge.png')]
+			var thumbSkinLarge:Class;
+			
+			function initCCHandler(event:Event) {
+				theScrubber = scrubber;
+				
+				Application.application.addEventListener(FlexEvent.APPLICATION_COMPLETE, appCompleteHandler);
+
+				// draw the background
+				graphics.beginFill(0x000000, .6);
+				graphics.drawRect(0, 0, 745, 55);
+				graphics.endFill();
+
+				// draw the background/border for the scrubbar
+				graphics.beginFill(0x000000, .3);
+				graphics.drawRect(274, 10, 462, 37);
+				graphics.endFill();
+				
+				graphics.lineStyle(1, 0xAFAFAF, 1);
+				graphics.moveTo(274, 10);
+				graphics.lineTo(736, 10);
+				graphics.lineTo(736, 47);
+				graphics.lineTo(274, 47);
+				graphics.lineTo(274,10);
+			}
+			
+			
+			function appCompleteHandler(event:Event) {
+				theMovie = Application.application.theMovie;
+				
+				Movie.movie.addEventListener(ScionMovieEvent.YOUTUBE_ASSET_CHANGED, youTubeAssetChangedHandler);
+			}
+			
+			
+			function youTubeAssetChangedHandler(event:Event) {
+				
+				youTubeProgress.clear();
+				var theMovie:ScionMovie = Movie.movie as ScionMovie;
+				
+				if (theMovie.theYouTubeAssetInstance) {
+					var youTubePlayer = theMovie.theYouTubeAssetInstance.player;
+					if (youTubePlayer) {
+						youTubeProgress.player = youTubePlayer;
+					}
+				}
+			}
+			
+			
+			public function resetState() {
+				
+				youTubeProgress.clear();
+				playButton.deactivate(true);
+				rewindButton.deactivate(true);
+			}
+			
+			
+			function widgetButtonClickHandler(widgetName) {
+				
+			}
+
+		]]>
+	</mx:Script>
+
+	<!--<mx:Canvas styleName="controlsBorder" x="11" y="9" width="572" height="37" alpha=".5" blendMode="subtract" />-->
+	
+	<!--<ns1:FadeButton id="resizeButton" styleName="makerControlButton" x="11" y="7" width="49" height="42" labelText="Scale" click="widgetButtonClickHandler('resize');" imageClass="{resizeButtonIcon}" onlyFadeIcons="true" onlyHighlightOnRollover="true" imageX="3" imageY="16" labelX="8" labelY="-1" />
+	<ns1:FadeButton id="rotateButton" styleName="makerControlButton" x="63" y="7" width="49" height="42" labelText="Rotate" click="widgetButtonClickHandler('rotate');" imageClass="{rotateButtonIcon}" onlyFadeIcons="true" onlyHighlightOnRollover="true" imageX="3" imageY="16" labelX="5" labelY="-1" />
+	<ns1:FadeButton id="arrangeButton" styleName="makerControlButton" x="115" y="7" width="49" height="42" labelText="Arrange" click="widgetButtonClickHandler('arrange');" imageClass="{arrangeButtonIcon}" onlyFadeIcons="true" onlyHighlightOnRollover="true" imageX="3" imageY="16" labelX="1" labelY="-1" />
+	-->
+	
+	<!--<ns1:HelpButton x="160" y="9" />-->
+	
+	<ns1:PlayButton x="203" y="16" id="playButton" />
+	<ns1:RewindButton x="235" y="16" id="rewindButton" />
+	
+	<ns1:MovieTimeMeter x="283" y="22" width="70" />
+
+	<ns2:YouTubeProgressBar x="354" y="22" width="371" height="13" id="youTubeProgress" color="#0E243C"/>
+	
+	<ns1:MovieScrubber id="scrubber" x="354" y="14" width="371" height="15" 
+			numberOfFrames="{Application.application.numberOfFrames}" doLarge="true" 
+			trackSkin="{ScrubberSliderTrackLarge}" sliderThumbClass="{ScrubberSliderThumbLarge}" 
+			thumbSkin="{thumbSkinLarge}"
+		/>
+
+	
+</mx:Canvas>

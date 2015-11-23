@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/util
+END
+SocketHelper.as
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/util/SocketHelper.as
+END
+CompleteResponseEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/util/CompleteResponseEvent.as
+END

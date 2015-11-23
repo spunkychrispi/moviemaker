@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="126" creationComplete="constructor(event);" borderStyle="solid">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.effects.AnimateProperty;
+			
+			/**
+			 * Left opening drawer. The tab sticks out of the drawer, so the drawer is
+			 * fully open when the left side of the cmpnt is where the left side of the tab
+			 * used to be. The drawer is closed when the tab is back to its original x.
+			 */
+			 
+			var state:String;
+			
+			public var closedTabX:int;
+			var closedDrawerX:int;	// the beginning of the drawer is the last x coord of the tab
+			public var tabWidth:int;
+			
+			[Bindable] 
+			var theStyleName:String;	// so the children can inherit the same style name
+			
+			
+			function constructor(event:Event):void {
+				// ???? keep ? closedTabX = tab.x + x;
+				closedTabX = x;
+				//closedDrawerX =  + tab.width;
+				//tabWidth = tab.width;
+				state = "closed";
+				
+				theStyleName = styleName as String;
+			}
+			
+			function tabClickHandler(event:Event=null):void {
+				if (state=="closed") {
+					openDrawer(event);
+				} else {
+					closeDrawer(event);
+				}
+			}
+			
+			
+			
+			public function isOpen() {
+				if (state=="open") return true;
+				else return false;
+			}
+			
+			
+			/**
+			 * Move the drawer all the way to the left until the left side of the cmpnt
+			 * is at closedDrawerX, ie the original left side of the tab.
+			 */
+			public function openDrawer(event:Event=null) {
+				state = "open";
+				
+				var effect:AnimateProperty = new AnimateProperty(this);
+				effect.property = "x";
+				// animate FROM wherever the drawer is actually at
+				effect.fromValue = x;
+				// animate to where the drawer is fully open
+				effect.toValue = closedTabX - width + tabWidth;
+				
+				effect.play();
+			}
+			
+			
+			/**
+			 * Move the drawer all the way to the right until the right side of the tab
+			 * is at its original x 
+			 */
+			public function closeDrawer(event:Event=null) {
+				state = "closed";
+				
+				var effect:AnimateProperty = new AnimateProperty(this);
+				effect.property = "x";
+				// animate FROM wherever the drawer is actually at
+				effect.fromValue = x;
+				// animate to where the drawer is fully closed
+				effect.toValue = closedTabX;
+				
+				effect.play();
+			}
+			
+		]]>
+	</mx:Script>
+
+	<!--<mx:Button x="0" y="0" id="tab" click="clickHandler(event);" styleName="{theStyleName}" height="124" width="28" fontFamily="asdf" fontSize="22"/>
+	<mx:Canvas x="48" y="15" width="351" height="225">
+	</mx:Canvas>-->
+	
+</mx:Canvas>

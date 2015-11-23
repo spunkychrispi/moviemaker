@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Timeline xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="movie.movie.*" value="1" showDataTip="false" creationComplete="initCCHandler(event);" change="movieScrubberChangeHandler(event);" mouseDown="movieScrubberMouseDownHandler(event);" mouseUp="movieScrubberMouseUpHandler(event);" >	
+	
+	<mx:Script>
+		<![CDATA[
+			import movie.assets.YouTubeAssetInstance;
+		
+			import scion.components.skins.ScrubberSliderThumb;
+			import scion.components.skins.ScrubberSliderThumbLarge;
+			import scion.components.skins.ScrubberSliderTrack;
+			import scion.components.skins.ScrubberSliderTrackLarge;
+			import movie.movie.Movie;
+			import mx.events.FlexEvent;
+			import scion.movie.ScionMovieEvent;
+			import mx.events.SliderEvent;
+			import scion.util.ScionErrorHandler;
+			
+			public var doLarge:Boolean = false;
+			
+			/**
+			 * Not sure why the value needs to be set here - for some reason the value isn't getting initialized to 1
+			 * and the thumbnail is off at startup.
+			 */
+			function initCCHandler(event:Event) {
+				value=1;
+			}
+			
+			
+			/**
+			 * If the user clicks on the scrub bar, the slider thumb will slide to where they clicked.
+			 * A change event is thrown only after the slider bar gets to where they clicked, so 
+			 * if they did click, don't start playing the movie again until after
+			 */
+			var mouseClickCompleted:Boolean;
+			var mouseClickValueChangeCompleted:Boolean;
+			var moviePlayingOnMouseDown:Boolean;
+			
+			function movieScrubberMouseDownHandler(event:Event) {
+				mouseClickCompleted = false;
+				mouseClickValueChangeCompleted = false;
+				if (Movie.movie.status==Movie.movie.MOVIE_PLAYING) {
+					moviePlayingOnMouseDown = true;
+					Movie.movie.stop();
+				} else {
+					moviePlayingOnMouseDown = false;
+				}
+				
+				ScionErrorHandler.closeTextHelp();
+			}
+			
+			function movieScrubberMouseUpHandler(event:Event) {
+				mouseClickCompleted = true;
+				
+				if (moviePlayingOnMouseDown && mouseClickValueChangeCompleted) {
+					if (Movie.movie.status = Movie.movie.MOVIE_PLAYING) Movie.movie.play();
+				}
+			}
+			
+			function movieScrubberChangeHandler(event:SliderEvent) {
+				mouseClickValueChangeCompleted = true;
+				
+				if (moviePlayingOnMouseDown && mouseClickCompleted) {
+					if (Movie.movie.status = Movie.movie.MOVIE_PLAYING) Movie.movie.play();
+				}
+				
+			}
+				
+		]]>
+		
+	</mx:Script>	
+			
+	
+</Timeline>

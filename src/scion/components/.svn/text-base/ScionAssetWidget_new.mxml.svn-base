@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AssetWidget xmlns="movie.assets.*" xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="scion.components.*" width="101" height="176" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+
+	<mx:Script>
+		<![CDATA[
+			import movie.assets.AssetInstance;
+			import scion.components.AssetSlider;
+			import movie.movie.Movie;
+			import mx.controls.VSlider;
+
+			[Embed('/assets/rotate_button_icon.png')]
+			var rotateButtonIcon:Class;
+			
+			[Embed('/assets/resize_button_icon.png')]
+			var resizeButtonIcon:Class;
+			
+			public var sizeControl:VSlider;
+			public var rotationControl:VSlider;
+			
+			/*defaultControls = ["size", "rotation", "zIndex"];
+			defaultBindingVariables = {size:"size", rotation:"theRotation", text:"text", zIndex:"zIndex"};
+
+			targetProperties = {size:"value", rotation:"value", text:"text", zIndex:"value"};*/
+			
+			function widgetButtonClickHandler(buttonName:String) {
+				
+				var button:FadeButton = this[buttonName+"Button"];
+				if (button.activeStateOn) {
+					button.deactivate();
+					this[buttonName+"ControlContainer"].visible = false;
+					
+				} else {
+					for each (var otherButton:String in defaultControls) {
+						this[otherButton+"Button"].deactivate();
+						this[otherButton+"ControlContainer"].visible = false;
+					}
+					button.activate();
+					this[buttonName+"ControlContainer"].visible = true;
+				}
+			}
+			
+			public override function initializeControls(asset:AssetInstance)
+			{
+				//zIndexControl.maximum = Movie.movie.numChildren-Movie.movie.numFloaters-1;
+				defaultControls = ["size", "rotation"];
+				
+				sizeControl = sizeControlContainer.slider;
+				rotationControl = rotationControlContainer.slider;
+				sizeControl.name = "size";
+				rotationControl.name = "rotation";
+				
+				sizeControl.maximum = Movie.movie.stageWidth * 1.1;	
+				
+				sizeControl.value = asset.theSize;
+				//sizeControl.value = 200;
+				rotationControl.value = asset.theRotation;
+				
+				sizeControl.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+				rotationControl.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+				
+				super.initializeControls(asset);
+			}
+			
+
+		]]>
+	</mx:Script>
+	
+	<!--<mx:HSlider x="4" width="145" height="16" name="size" id="sizeControl" minimum="0" snapInterval="1" liveDragging="true" mouseDown="mouseDownHandler(event);" visible="false" />
+	<mx:HSlider x="4" width="145" height="16" name="rotation" id="rotationControl" minimum="-180" maximum="180" snapInterval="1" liveDragging="true" mouseDown="mouseDownHandler(event);" visible="false" />
+	<mx:HSlider x="4" width="145" height="16" name="zIndex" id="zIndexControl" minimum="0" snapInterval="1" liveDragging="true" mouseDown="mouseDownHandler(event);" visible ="false" />
+	-->
+	
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" />
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" />
+	
+	<ns1:AssetSlider x="5" width="39" height="132" minimum="0" id="sizeControlContainer" visible="false" hideEffect="{fadeOut}" showEffect="{fadeIn}" />
+	<ns1:AssetSlider x="57" width="39" height="132" minimum="-180" maximum="180" id="rotationControlContainer" visible="false" hideEffect="{fadeOut}" showEffect="{fadeIn}" />
+	
+	<ns1:FadeButton id="sizeButton" styleName="makerControlButton" width="49" height="42" y="134" labelText="Scale" click="widgetButtonClickHandler('size');" imageClass="{resizeButtonIcon}" onlyFadeIcons="true" imageX="3" imageY="16" labelX="8" labelY="-1" />
+	<ns1:FadeButton id="rotationButton" styleName="makerControlButton" x="52" width="49" height="42" y="134" labelText="Rotate" click="widgetButtonClickHandler('rotation');" imageClass="{rotateButtonIcon}" onlyFadeIcons="true" imageX="3" imageY="16" labelX="5" labelY="-1" />
+	
+	
+</AssetWidget>

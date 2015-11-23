@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="600" height="600" applicationComplete="_doInitialize(event);" >
+	
+	<mx:Script>
+		<![CDATA[
+			function _doInitialize(event:Event) {
+				stage.scaleMode = StageScaleMode.NO_BORDER;
+			}
+		]]>
+	</mx:Script>
+	
+	
+	
+	<mx:Label text="Hello! How are you today?!"  x="0" y="0" width="548" height="89" fontSize="36"/>
+	
+</mx:Application> 

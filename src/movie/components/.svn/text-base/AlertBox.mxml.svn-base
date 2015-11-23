@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="scion.components.*" horizontalScrollPolicy="off" 
+	verticalScrollPolicy="off"  backgroundAlpha=".7" backgroundColor="#000000">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import scion.components.FadeButton;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var title:String; 
+			
+			[Bindable]
+			public var message:String;
+			
+			[Bindable]
+			public var buttonLabel:String;
+			
+			[Bindable]
+			public var buttonVisible:Boolean = false;
+			
+			[Bindable]
+			public var labelX:Number = 5;
+			
+			public var callback:Function;
+			
+			function clickHandler(event:Event)
+			{
+				PopUpManager.removePopUp(this);
+				
+				if (callback) {
+					callback.call(this);
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	<mx:Label styleName="alertTitle" id="titleLabel" text="{title}" />
+	
+	<mx:Label styleName="alertMessage" text="{message}" />
+	
+	<ns1:FadeButton click="clickHandler(event);" labelText="{buttonLabel}" visible="{buttonVisible}"
+				width="71" height="26" backgroundColor="#D03B1E" 
+				borderStyle="solid" borderThickness="1" borderColor="#5B1D11" 
+				labelY="-1" labelX="{labelX}" fontSize="16" fadeAlpha="1" />
+	
+	
+</mx:VBox>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Image xmlns:mx="http://www.adobe.com/2006/mxml" width="20" height="20" source="assets/Audio_Asset_icon.png">
+
+	<mx:Script>
+		<![CDATA[
+			public var asset:*;
+		]]>
+	</mx:Script>
+	
+</mx:Image>

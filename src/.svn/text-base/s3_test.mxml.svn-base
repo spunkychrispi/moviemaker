@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical">
+  
+  
+  <mx:Button label="Lookup" click="clickHandler(event);"/>
+  
+  <mx:Script> 
+    <![CDATA[ 
+      private var loader:URLLoader; 
+      private var fileReference:FileReference;
+      
+      private var request:URLRequest = new URLRequest( "http://spunkychrispiimages.s3.amazonaws.com/store.xml" ); 
+ 
+ 	  function clickHandler(event:Event) {
+ 	  	fileReference=new FileReference();
+			fileReference.addEventListener(Event.SELECT, onSelectHandler);
+			var swfTypeFilter:FileFilter = new FileFilter("SWF Files (*.swf)","*.swf");
+			var allTypeFilter:FileFilter = new FileFilter("All Files (*.*)","*.*");
+			fileReference.browse([swfTypeFilter, allTypeFilter]);
+ 	  }
+ 
+ 
+ 	function onSelectHandler(event:Event) {
+ 		trace("onFileSelected");
+           /* fileReference.addEventListener(Event.COMPLETE, onLoadedHandler);
+            fileReference.addEventListener(IOErrorEvent.IO_ERROR, onFileLoadError);*/
+            //fileReference.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+            
+            try {
+            	fileReference.load();
+            } catch (e:Error) {
+            	trace("caught error");
+            }
+  }
+  
+  function onLoadedHandler(event:Event) {
+  		
+  }
+ 
+    ]]> 
+  </mx:Script> 
+</mx:Application>
+

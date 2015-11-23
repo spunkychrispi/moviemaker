@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="initCCHandler(event);">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.SWFLoader;
+			import mx.controls.Image;
+			import mx.core.UIComponent;
+			import flash.display.MovieClip;
+			import mx.events.FlexEvent;
+			
+			var loader:Loader;
+			var swf:Image;
+		
+			public function DuplicateDisplayObject(dO:DisplayObject):DisplayObject
+			{
+			    if(dO == null)
+			        return null;
+			    var dOClass:Class = Object(dO).constructor;
+			    return DisplayObject(new dOClass());
+			}
+
+		
+			function initCCHandler(event:Event) {
+				loader = new Loader();
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, assetLoaded, false, 0, true);
+				loader.load(new URLRequest("/assets/fx/Flowers.swf"));
+			}
+			
+			function assetLoaded(event:Event) {
+				//var text:Class = loader.contentLoaderInfo.applicationDomain.getDefinition("HelloAnimate") as Class;
+				
+				//var asset:* = new text();
+				
+				//var asset:* = loader.content;
+				
+				swf = new Image();
+				//swf.load(asset);
+				swf.addEventListener(FlexEvent.UPDATE_COMPLETE, swfLoaded);
+				//swf.load(loader.content);
+				swf.load(new URLRequest("/assets/fx/Flowers.swf"));
+				
+			}
+			
+			function swfLoaded(event:Event) {
+				myCanvas.addChild(swf);
+				
+				var mv:MovieClip = swf.content as MovieClip;
+				mv.gotoAndPlay(0);
+				//swf.load(DuplicateDisplayObject(asset));
+				
+				//var ui:UIComponent = new UIComponent();
+				//ui.addChild(DuplicateDisplayObject(asset));
+				
+			}
+				
+				
+		]]>
+	</mx:Script>
+	
+	<mx:Canvas id="myCanvas" x="100" y="100" width="100" height="100" />
+	
+</mx:Application>

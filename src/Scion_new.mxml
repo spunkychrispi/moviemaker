@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  layout="absolute" 
+	applicationComplete="_doInitialize(event);" xmlns:ns1="movie.movie.*" 
+	width="408" height="745" preinitialize="preinit(event);"  xmlns:ns2="movie.util.*" 
+	xmlns:ns3="scion.components.*" resize="applicationResizeHandler(event);" backgroundColor="#484848">
+<!-- width="100%" height=800-->
+	<mx:Style source="main.css" />
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.List;
+			import mx.core.UIComponent;
+			import movie.util.DataClientRemoteObject;
+			
+			import mx.controls.Alert; 
+			import mx.core.DragSource;
+        	import mx.managers.DragManager;
+        	import mx.events.*;
+        	import movie.assets.*;
+        	import movie.util.*;
+        	import movie.movie.* 
+        	import scion.movie.ScionMovie;
+        	import scion.assets.ScionAssetClassList;
+        	import scion.assets.CannedAssetData; 
+        	import mx.containers.Canvas; 
+        	import flash.system.Security;
+        	import scion.controller.MovieController;
+        	import flash.display.StageScaleMode;
+        	import mx.events.CloseEvent;
+        	
+        	
+        	public var theMovie:ScionMovie;
+        	public var assetList:ScionAssetClassList;
+        	var textAssetList:ScionAssetClassList;
+        	var audioAssetList:ScionAssetClassList;
+        	var imageAssetList:ScionAssetClassList;
+        	
+        	
+        	public const S3_ACCESS_ID = "09HVE2QSRFVMBSCZ6NR2";
+			public const S3_BUCKET = "spunkychrispiimages";
+			
+			public var thumbnailWidth:int = 120;
+			public var thumbnailHeight:int = 78;
+			public var thumbnailWidthLarge:int = 120;
+			public var thumbnailHeightLarge:int = 90;
+			public var thumbnailWidthLargest:int = 165;
+			public var thumbnailHeightLargest:int = 107;
+			
+			
+			public var applicationX:int = 265; // distance from the right edge of the browser window
+												// needed so that we can set the movieMaker tab at the left 
+												// edge of the browser window
+			
+			//public var server:String = "http://local.scion";	// used for testing purposes, if the movie is on the same server,
+														// leave this blank	
+			public var server:String = "";
+        	
+
+			private var theFrameRate:int = 24;	// Application.application.frameRate doesn't seem to be reliable for some reason
+											// so record the frameRate here
+			private var numberOfFrames:int = 4;     // this is just an initializer - the actual number of frames will depend on
+			
+			[Bindable]											// the length of the youtube or scion fx asset being used.
+			public var stageWidth:int = 745;			// deprecated - now coming from theMovie class, which gets them from
+			
+			[Bindable]										// the size of the theStage
+			public var stageHeight:int = 408;
+			
+			// flashVars
+			public var mode:String;					// mode=player|maker
+			public var movieID:String;				// id of the movie being played
+			public var userMovieID:String;			// the id of the user's movie saved in the session
+			public var shareMovieID:String;			// id of the share movie - either the user's, or the last one played
+			[Bindable]
+			public var shareTabVisible:Boolean;
+			
+			public var movieChangesSaved:Boolean;			// flag if the most recent changes to the movie have been saved
+															// controls showing of the save form, and the alert box
+															// when the drawer tabs are clicked
+			
+			
+			protected function preinit(event:Event) {
+				setStyle("backgroundGradientColors", [0x000000, 0x000000]);
+			}
+			
+
+        	private function _doInitialize(event:Event):void {
+        		
+        		// since there are no changes at startup, set this to true
+        		movieChangesSaved = true;
+        		
+        		Security.allowInsecureDomain("*");
+				Security.allowDomain("*");
+				
+				mode = parameters.mode;
+				movieID = parameters.movieId;
+				userMovieID = parameters.userMovieId;
+				shareMovieID = parameters.shareMovieId;
+				
+				//ErrorHandler.alertError(width);
+				
+				
+				stage.frameRate = theFrameRate;
+	        	this.theMovie = new ScionMovie(theStage, controlPanel, numberOfFrames, theFrameRate);
+	        	theMovie.mode = mode;
+	        	//theMovie.goToFrame(1);
+	        	
+				// create the controller
+				var dummy:* = new MovieController(theMovie);
+	        	
+	        	if (theMovie.mode!="embed") {
+	        		movieMaker.visible = true;
+	        		//shareTabVisible = shareMovieID ? true : false;
+	        		//chooseTab.visible = true;
+	        		//favesTab.visible = true;
+					stage.scaleMode = StageScaleMode.NO_SCALE;
+					
+	        	} else {
+	        		stage.scaleMode = StageScaleMode.EXACT_FIT;
+	        	}
+	        	
+	        	// load the movie and start playing
+	        	if (theMovie.mode=="player" || theMovie.mode=='embed') {
+	        		
+	        		playerControls.visible = true;
+	        		
+	        		//MovieController.controller.loadMovie(movieID, S3_BUCKET);
+	        		
+	        		// the first time they click the maker tab, when viewing someone else's movie, 
+	        		// reset the movie and put into maker mode.
+	        		movieMaker.addEventListener(MouseEvent.CLICK, movieMakerClickHandler);
+	        	
+	        	} else if (theMovie.mode=="maker") { 
+	        		
+	        		makerControls.visible = true;
+	        	
+		        	this.addEventListener(MouseEvent.MOUSE_DOWN, _mouseDownHandler, true);
+		        	
+		     		/*this.assetList = new ScionAssetClassList(movieMaker.assetListContainer);
+		     		textAssetList = new ScionAssetClassList(movieMaker.textAssetListContainer);
+		     		audioAssetList = new ScionAssetClassList(movieMaker.audioAssetListContainer);
+		     		imageAssetList = new ScionAssetClassList(movieMaker.imageAssetListContainer);*/
+		     		
+		     		
+		     		var assetProtos:Array = CannedAssetData.getFxAssets();
+		     		populateAssetList(assetProtos, assetList);
+		     		
+		     		assetProtos = CannedAssetData.getTextFxAssets();
+		     		populateAssetList(assetProtos, textAssetList);
+		     		
+		     		assetProtos = CannedAssetData.getAudioAssets();
+		     		populateAssetList(assetProtos, audioAssetList);
+		     		
+		     		assetProtos = CannedAssetData.getImageAssets();
+		     		populateAssetList(assetProtos, imageAssetList);
+		     		
+		        	//this._importAssets();
+		        	
+		        	// add the text assetClass to the list
+		        	//var textAssetClass = new AssetClass("Text", "Text");
+		        	//this.assetList.addAsset(textAssetClass);
+		        	
+		        	//var youtubeAssetClass = new AssetClass("YouTube", "ScionYouTube", null, null, {assetPath:"UfRapmWQANY"});
+		        	//assetList.addAsset(youtubeAssetClass);
+		        	
+		        	//movieMaker.openDrawer();
+		        }
+        	}
+			
+			
+			
+			
+			/********************************FX ASSETS************************************/
+			// manually create the fx assets - doesn't sound like these need to be dynamic
+			
+			
+        	private function populateAssetList(assetProtos:Array, assetList:ScionAssetClassList) {
+        		for each (var assetProto:Object in assetProtos) {
+        			var assetObject = new AssetClass(assetProto.name, assetProto.type, assetProto.thumbnail, null, assetProto.properties, assetProto.rolloverThumbnail);
+					assetObject.addToAssetList(assetList);
+        		}
+        	}
+        	
+			
+			 
+			
+			/*******************************HANDLERS***************************************/
+        	
+        	
+        	private function applicationResizeHandler(event:Event) {
+        		if (movieMaker) {
+        			/*movieMaker.closedTabX = width-(22+applicationX);
+        			if (movieMaker.isOpen()) {
+        				movieMaker.x = width-(movieMaker.width+applicationX);
+        			} else {
+        				movieMaker.x = width-(22+applicationX);
+        			}*/
+        		}
+        	}
+        	
+        	private function _mouseDownHandler(event:Event)
+        	{
+        		//if (this.theMovie.isPlaying) this.theMovie.stop();
+        	}
+        	
+        	
+        	protected function movieMakerClickHandler(event:Event) {
+        		
+        		if (mode == 'player') {
+        			theMovie.reset();
+        			mode = 'maker';
+        			movieMaker.removeEventListener(MouseEvent.CLICK, movieMakerClickHandler);
+        		}
+        	}
+        			
+        	
+        	
+        	/*private function _importAssets() {
+        		
+	        	var assetImporter:AssetImporter = new AssetImporter();
+	        	
+	        	var assetRemoteObject:DataClientRemoteObject = new DataClientRemoteObject("amfphp", "views", "get", ["movie_assets"]);
+	        	assetImporter.dataClient = assetRemoteObject;
+	        	
+	        	var assetTransformer:DrupalViewToAssetTransform = new DrupalViewToAssetTransform();
+	        	assetImporter.dataTransformer = assetTransformer;
+	        	
+	        	assetImporter.importAssets(this.populateAssetList);
+        			
+        	}
+        	
+        	
+        	public function populateAssetList(assets:Array) {
+        		
+        		for each (var assetProto:Object in assets) {
+					var assetObject = new AssetClass(assetProto.name, assetProto.type, assetProto.thumbnail, null, assetProto.properties);
+					assetObject.addToAssetList(this.assetList);
+				}
+				
+				var youtubeAssetClass = new AssetClass("YouTube", "ScionYouTube", null, null, {assetPath:"y2GdlNOuvTI"});
+	        	assetList.addAsset(youtubeAssetClass, 8);
+        	}*/
+        	
+        		
+			private function toggleControls(event:Event) 
+			{
+				Alert.show(event.toString());
+			}
+			
+			
+			// Called when the user moves the drag proxy onto the drop target.
+	        private function dragEnterHandler(event:DragEvent):void {
+	
+	            // Accept the drag only if the source is a MovieAsset
+	            if (event.dragInitiator is AssetClassListItem) {
+
+	                // Get the drop target component from the event object.
+	                var dropTarget:Canvas=Canvas(event.currentTarget);
+	                 
+	                // Accept the drop.
+	                DragManager.acceptDragDrop(dropTarget);
+	            }
+	        }
+	                
+	        // Called if the target accepts the dragged object and the user 
+	        // releases the mouse button while over the Canvas container. 
+	        private function dragDropHandler(event:DragEvent):void {
+	
+				theMovie.goToFrame(1);
+				
+	            // call the addToMovie function on the initiator
+	            var assetListItem:AssetClassListItem = AssetClassListItem(event.dragInitiator);
+	            var movieAsset:AssetClass = assetListItem.asset;
+	            movieAsset.addToMovie(this.theMovie, event.localX, event.localY);
+	        }  
+	        
+	        private function playTheMovie() 
+	        {
+	        	
+	        	//theMovie.playFrame(4);
+	        	
+	        	theMovie.play(true);
+	        }
+	        
+	        private function moveAsset()
+	        {
+	        
+	        	var stage:UIComponent = theMovie.stage;
+	        	var asset:UIComponent = stage.getChildAt(0) as UIComponent;
+	        	asset.x = 100;
+	        	asset.y = 200;
+	        	//asset.invalidateProperties();
+	        }
+	        
+	        public function showProgressBar(source:Object=null, label:String=null, indeterminate=false, hideOnDone=true) {
+	        	//theProgressBar.mode = mode;
+	        	
+	        	theProgressBar.indeterminate = indeterminate;
+				theProgressBar.source = source;
+				theProgressBar.visible = true;
+				
+				if (label) {
+					theProgressBar.label = label;
+				}
+				if (!indeterminate && hideOnDone) {
+					theProgressBar.addEventListener(Event.COMPLETE, hideProgressBar);
+				}
+			}
+		
+			public function hideProgressBar(event:Event=null) {
+				theProgressBar.visible = 0;
+			}
+			
+			public function saveHandler() {
+				MovieController.controller.saveMovie();
+			}
+			
+			public function saveFRHandler() {
+				var fileReference:FileReference = new FileReference();
+				fileReference.addEventListener(Event.SELECT, function(event:Event):void {
+                    
+                    MovieController.controller.saveMovieRef(event.target as FileReference);
+                });
+                
+                fileReference.browse();
+   			}
+   			
+   			
+   			/*public function loadHandler() {
+   				if (movieIDField.text) {
+   					MovieController.controller.loadMovie(movieIDField.text, S3_BUCKET);
+   				}
+   			}*/
+   			
+   			
+   			public function displaySaveCmpnt() {
+   				if (! movieChangesSaved) saveForm.visible = true;
+   			}
+   			
+   			public function hideSaveCmpnt() {
+   				if (saveForm.visible) {
+   					saveForm.visible = false;
+   				} 
+   			}
+	        
+	        
+	        /**
+	        * If the user clicks on one of the other drawer tabs, pop open a dialogue for them to confirm.
+	        */
+	        var drawerID:String;
+	        public function tabClickHandler(drawerID:String) {
+	        
+	        	if (mode == "maker" && !movieChangesSaved) {
+		        	this.drawerID = drawerID;
+		        	var info:String = "If you leave this page, your movie will be lost. Are you sure you want to?";
+		        	ErrorHandler.alertInfo(info, Alert.YES|Alert.NO, leaveMovieAlertClickHandler);
+		        } else {
+		        	leaveMovie(drawerID);
+		        }
+	        }
+	        
+	        /**
+	        * If the user clicked Yes, close the maker drawer and go to the home page. 
+	        * Else do nothing.
+	        */
+	        public function leaveMovieAlertClickHandler(event:CloseEvent) {
+	        
+	        	if (event.detail == Alert.YES) {
+	        		//if (movieMaker.isOpen()) {
+	        			//movieMaker.closeDrawer();
+	        		//}
+	        		leaveMovie(drawerID);
+	        	}
+	        }
+	        
+	        /**
+	        * Go to the home page and set the drawer to open
+	        */
+	        protected function leaveMovie(drawerID:String) {
+	        	var u:URLRequest = new URLRequest("/?d="+drawerID);
+	        	navigateToURL(u, "_self");
+	        }
+	 
+ 
+       /* public function onFileLoadError(event:Event):void
+        {
+            trace("File load error");
+        }  
+ 
+        public function onLoaderComplete(event:Event):void
+        {
+            stage.addChild(mLoader);
+        }*/
+        
+        /*	private function dataChangeHandler(event:Event) {
+        		
+        		ScionFXAssetInstance.FXText = event.target.text;
+        		
+        	}*/
+      
+		]]>
+	</mx:Script>  
+	
+	
+	<!--<mx:Image id="background" x="0" y="0" source="@Embed('/assets/background.jpg')" />-->
+
+	<mx:Canvas x="0" y="0" backgroundColor="#191919" width="{stageWidth}" height="{stageHeight}" id="theStage" dragEnter="dragEnterHandler(event);" dragDrop="dragDropHandler(event);" backgroundAlpha="1.0" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	</mx:Canvas>
+	
+	<mx:Fade id="fadeIn" alphaFrom="0" alphaTo="1" />
+	<mx:Fade id="fadeOut" alphaFrom="1" alphaTo="0" />
+	<mx:Canvas x="190" y="40" width="0" height="0" id="saveForm" visible="false" hideEffect="{fadeOut}" showEffect="{fadeIn}" />
+	
+	<!--<mx:Image maintainAspectRatio="false" source="@Embed('/assets/IMG_4057.jpg')" x="0" y="0" width="{stageWidth}" height="{stageHeight}" />
+	-->
+	<!--<ns3:MovieMaker x="38" y="413" id="movieMaker" visible="false"></ns3:MovieMaker>-->
+
+	
+	<mx:Canvas x="0" y="0" id="movieMaker" visible="false" />
+	
+	<!--<mx:Button click="scrubberChange();" label="saveMovie" />
+	<mx:TextInput x="100" id="movieIDField" color="#000000" />
+	<mx:Button x="300" click="loadHandler();" label="loadMovie" />-->
+	
+	
+	<mx:ProgressBar id="theProgressBar" x="0" y="0" visible="false"/>
+	
+	<mx:Canvas x="0" y="0" visible="false" id="playerControls" />
+	
+	<mx:Canvas x="0" y="0" id="makerControls" visible="false" />
+		
+	<!-- asset widget container -->
+	<mx:Canvas x="11" y="226" width="101" height="180" id="controlPanel" visible="true" verticalScrollPolicy="off" horizontalScrollPolicy="off" />
+
+	
+	<!-- DRAWER BUTTONS -->
+
+
+	<!--<mx:Image y="600" id="thumbnailPreview" width="{thumbnailWidth}" height="{thumbnailHeight}" />-->
+	
+	<!--<ns2:UserImageClassFileUpload x="45" y="631" width="166" height="85">
+	</ns2:UserImageClassFileUpload>
+	<ns2:UserAudioClassFileUpload y="631" width="164" height="82" x="230">
+	</ns2:UserAudioClassFileUpload>
+	<ns2:YouTubeMovieIDForm x="414" y="628">
+	</ns2:YouTubeMovieIDForm>
+	<mx:Label x="802" y="95" text="FX Text:" fontSize="12"/>
+	<mx:TextInput x="809" y="128" width="254" height="27" change="dataChangeHandler(event);" />-->
+	<!--<mx:Button x="45" y="736" label="Save" click="Application.application.theMovie.save();" />
+	<mx:Button x="120" y="736" label="Load" click="Application.application.theMovie.load();" />-->
+
+
+	
+</mx:Application>

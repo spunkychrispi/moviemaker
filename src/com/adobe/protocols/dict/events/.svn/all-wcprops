@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events
+END
+DictionaryServerEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events/DictionaryServerEvent.as
+END
+MatchEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events/MatchEvent.as
+END
+DefinitionHeaderEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events/DefinitionHeaderEvent.as
+END
+ConnectedEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events/ConnectedEvent.as
+END
+DisconnectedEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events/DisconnectedEvent.as
+END
+DatabaseEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events/DatabaseEvent.as
+END
+MatchStrategiesEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events/MatchStrategiesEvent.as
+END
+DefinitionEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events/DefinitionEvent.as
+END
+ErrorEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events/ErrorEvent.as
+END
+NoMatchEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/source/flex/!svn/ver/2/Scion/src/com/adobe/protocols/dict/events/NoMatchEvent.as
+END

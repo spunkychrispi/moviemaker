@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="104" height="104" borderStyle="solid" borderThickness="2" borderColor="#000203">
+
+	<mx:Script>
+		<![CDATA[
+		
+			import mx.core.DragSource;
+			import mx.managers.DragManager;
+			import flash.events.Event;
+				
+			[Bindable]	
+			var text:String;
+			[Bindable]
+			var thumbnail:String;
+			
+			var thumbnailRoll:String;
+			
+			
+			public var asset:AssetClass;
+
+			function constructor(asset:AssetClass)
+			{
+				this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseMoveHandler);
+				
+				this.asset = asset;
+				this.text = asset.name;
+				this.thumbnail = asset.thumbnail;
+				
+				if (asset.thumbnailRoll) thumbnailRoll = asset.thumbnailRoll;
+			}
+			
+			public function mouseMoveHandler(event:MouseEvent):void
+			{
+				
+				//Alert.show("hello");
+				
+				// Get the drag initiator component from the event object.
+	            var dragInitiator:AssetClassListItem = AssetClassListItem(event.currentTarget);
+	            
+	            // Create a DragSource object.
+	            var ds:DragSource = new DragSource();
+	
+	            // Add the data to the object.
+	            //ds.addData(this, 'MovieAsset');
+	
+	            // Call the DragManager doDrag() method to start the drag. 
+	            DragManager.doDrag(dragInitiator, ds, event);
+			}
+			
+			
+			protected function rollOverHandler(event:Event) {
+				
+				if (thumbnailRoll) imageCmp.source = thumbnailRoll;
+			}
+			
+			protected function rollOutHandler(event:Event) {
+				if (thumbnail) imageCmp.source = thumbnail;
+			}
+		
+		]]>
+	</mx:Script>
+
+	<mx:Image x="0" y="0" width="100" height="75" id="imageCmp" source="{this.thumbnail}" rollOver="rollOverHandler(event);" rollOut="rollOutHandler(event);" />
+	<mx:Label x="5" y="78" width="89" textAlign="center" id="nameCmp" text="{this.text}"/>
+	
+</mx:Canvas>

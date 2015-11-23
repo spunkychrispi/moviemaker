@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/source/flex/!svn/ver/2/Scion/src/movie/movie
+END
+MovieSaveLoad.as
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/source/flex/!svn/ver/3/Scion/src/movie/movie/MovieSaveLoad.as
+END
+Movie.as
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/source/flex/!svn/ver/6/Scion/src/movie/movie/Movie.as
+END
+Timeline.mxml
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/source/flex/!svn/ver/2/Scion/src/movie/movie/Timeline.mxml
+END
+MovieEvent.as
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/source/flex/!svn/ver/2/Scion/src/movie/movie/MovieEvent.as
+END
+FrameStateManager_preFloatTween.as
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/source/flex/!svn/ver/2/Scion/src/movie/movie/FrameStateManager_preFloatTween.as
+END
+FrameStateManager.as
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/source/flex/!svn/ver/2/Scion/src/movie/movie/FrameStateManager.as
+END
+AssetManager.as
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/source/flex/!svn/ver/2/Scion/src/movie/movie/AssetManager.as
+END

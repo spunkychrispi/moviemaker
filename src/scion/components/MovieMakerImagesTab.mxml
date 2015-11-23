@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MovieMakerTab xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="685" height="149" creationComplete="initCCHandler(event);" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+
+	
+	<mx:Script>
+		<![CDATA[
+		
+		  	import flash.net.FileReference;
+			import mx.core.Application;
+			
+			import scion.assets.ScionYouTubeAssetInstanceCreator;
+			import movie.assets.YouTubeAssetInstance;
+			import scion.assets.ScionImageAssetInstanceCreator;
+			import movie.assets.AssetInstance;
+			import movie.assets.AssetEvent;
+			import scion.util.ScionErrorHandler;
+			
+			import mx.containers.ViewStack;
+		
+			var youTubeFieldClicked:Boolean = false;
+			private var fileReference:FileReference;
+		
+			
+			function initCCHandler(event:Event)
+			{
+				fileReference = new FileReference();
+				fileReference.addEventListener(Event.SELECT, fileSelectedHandler);
+				fileReference.addEventListener(Event.COMPLETE, fileLoadedHandler);
+				fileReference.addEventListener(Event.CANCEL, fileCancelHandler);
+			}
+			
+			function browseButtonClickHandler(ev:MouseEvent):void
+			{
+				browseButton.activate();
+				fileReference.browse([new FileFilter("jpg files","*.jpg;*.jpeg;*.gif;*.png")]);
+			}
+			
+			function fileSelectedHandler(event:Event) {
+				youTubeText.setStyle("color", "#656565");
+	     		youTubeText.text = fileReference.name;
+	     		//extraTextInputDefault.text = "";
+	     		browseButton.deactivate();
+	     	}
+	     	
+	     	public function fileCancelHandler(event:Event) {
+				browseButton.deactivate();
+			}
+
+	     
+		    function uploadButtonClickHandler(event:MouseEvent) {
+		     	if (! rightsCheckbox.selected) 
+		     	{
+		     		ScionErrorHandler.makerAlert("Forgot to check the box?", "Please verify that you have the right to upload your assets", "Go Back");
+		     		//ErrorHandler.alertError("Please check the box to confirm you have audio rights and have read the terms and conditions of use.");
+		     	} else {
+		     		
+		     		// if youtube.com is in the textfield, process this as a youtube link
+		     		if (youTubeText.text.indexOf("youtube.com") > -1) {
+		     			
+		     			Application.application.showProgressBar(null, "loading YouTube", true, false);
+		     			var creator = new ScionYouTubeAssetInstanceCreator("ScionYouTube");
+		     			creator.addEventListener(AssetEvent.ASSET_CREATED, assetCreatedHandler);
+		     			creator.createInstanceFromURL(youTubeText.text);
+		     		} else {
+		     			
+		     			Application.application.showProgressBar(null, "loading image", true, false);
+		     			try {
+		     				fileReference.load();	
+		     			} catch (e:Error) {
+		     				Application.application.hideProgressBar();
+		     				ScionErrorHandler.makerAlert("Did you browse to a file?", "Please browse to a file or paste in your YouTube link", "Go Back");
+		     			}
+		     		}
+		     		
+		     	}		     
+		     }
+		     
+		     
+		     function fileLoadedHandler(event:Event) {
+		     		Application.application.hideProgressBar();
+		     		Application.application.showProgressBar(null, "loading image", true, false);
+		     		var creator = new ScionImageAssetInstanceCreator("ScionImage");
+		     		creator.addEventListener(AssetEvent.ASSET_CREATED, assetCreatedHandler);
+		     		creator.createInstanceFromFileReference(fileReference);
+		     }
+		     
+		     		     
+		     function assetCreatedHandler(event:Event) {
+		     	
+		     	// deselect the canned asset, if it was selected
+		     	// this shouldn't be in the Application level!
+		     	Application.application.imageAssetList.deselectItems();
+		     	
+		     	var asset:AssetInstance = event.target.asset;
+		     	
+		     	Application.application.hideProgressBar();
+		     	
+		     	//Application.application.thumbnailPreview.source = event.target.thumbnail;
+		     	
+		     	Application.application.theMovie.thumbnail = event.target.thumbnail;
+				Application.application.theMovie.addAssetToMovie(asset.name, asset);
+		     }
+		
+			function textClickHandler2(event:Event, target:TextInput) {
+				//extraTextInputDefault.visible = 0;
+				
+				if (! youTubeFieldClicked) {
+					textClickHandler(event, target);
+					youTubeFieldClicked = true;
+				} 
+			}
+			
+			function youTubeLabelClickHandler(event:Event) {
+				//youTubeText.dispatchEvent(new MouseEvent(MouseEvent.CLICK, true, false));
+				textClickHandler2(event, youTubeText);
+				
+				//youTubeTextInput.setStyle = "#656565";
+				//clickedTextFields.push(youTubeTextInput);
+				
+				focusManager.setFocus(youTubeText);
+			}
+			
+			 function cannedAssetsClickHandler(event:Event) {
+		     	ViewStack(parent).selectedIndex = 1;
+		     }
+			
+		]]>
+	</mx:Script>
+	<mx:Label x="-4" y="8" fontSize="18" text="Upload Image" visible="false" />
+	<!--<mx:Label x="-4" y="28" fontSize="14" color="#0084FF" text="Paste in your youTube link or upload your jpg image here." />-->
+	
+	<mx:TextInput id="youTubeText" name="adsfasdf" width="397" height="24" x="0" y="69" color="#D03B1E" fontSize="16" text="Choose your file." click="textClickHandler2(event, youTubeText);" borderColor="#000000" borderStyle="solid" borderThickness="1" />
+	<!--<mx:Label x="115" y="80" color="#000000" fontSize="12" text="Using a YouTube file? Paste in the URL." id="extraTextInputDefault" selectable="true" click="youTubeLabelClickHandler(event);" />-->
+	<FadeButton click="browseButtonClickHandler(event);" id="browseButton" x="399" y="69" width="66" height="24" backgroundColor="#0870D0" borderStyle="solid" borderThickness="1" borderColor="#005CB2" labelText="Browse" labelX="3" labelY="-1" fontSize="16" />
+	<mx:CheckBox id="rightsCheckbox" focusAlpha="0" height="13" width="13" x="0" y="112" borderColor="#D03B1E" cornerRadius="0" fillAlphas="[1,1]" fillColors="[#FFFFFF,#FFFFFF]" />
+	<mx:Label x="20" y="109" fontSize="14" text="I have the right to use this image and have reviewed the terms and conditions for Motion FX." />
+	<FadeButton click="uploadButtonClickHandler(event);" x="478" y="69" width="66" height="24" backgroundColor="#D03B1E" borderStyle="solid" borderThickness="1" borderColor="#5B1D11" labelText="Upload" labelY="-1" labelX="5" fontSize="16" />
+
+	<FadeButtonBase x="475" y="12" click="cannedAssetsClickHandler(event);" activeStateOn="true" useHandCursor="true" buttonMode="true" mouseChildren="false">
+		<mx:Label id="cannedHeading" text="Don't have any images?" fontSize="14" />
+		<mx:Image y="6" x="143" width="5" height="9" source="@Embed('/assets/forward_arrow.png')" />
+	</FadeButtonBase>
+
+</MovieMakerTab>

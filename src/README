@@ -1,0 +1,25 @@
+
+Implementation Notes:
+
+Common types of classes:
+
+AssetClass - There is only one AssetClass class for all the asset types. This is used to make the asset instances and add them to the stage. Can be added to an AssetClassList for display.
+	
+AssetInstance - Each asset type has an AssetInstance class. These are the objects that are added to the movie.
+
+AssetInstanceComponent - The part of the instance that contains the actual asset.
+
+AssetClassCreator - Per each asset type. Creates a new AssetClass object for the asset. This is used for user created content that can then be added to an AssetClassList.
+	
+AssetInstanceCreator - Per each asset type. Creates a new AssetInstance. Used for user created content when a class doesn't need to be made - ie, the content will just get directly added to the stage. These classes were created in a separate branch from the AssetClassCreator classes. Since Scion didn't appear to need the AssetClassCreators, some of the later functionality in AssetInstanceCreator is not in the AssetClassCreator. So if AssetClassCreator is put in use again, we'll need to review how to share the functionality that needs to be shared.
+
+
+
+Asset Widgets - 
+
+The movie has a set controlPanel canvas where the widgets are to be displayed. setControlPanel(widget) and removeControlPanel set and remove the active widget.
+
+Assets manage their own widgets via the controlWidget parameter. Ideally, assets should share a widget, and the widget get initialized with an asset's parameters when the asset becomes active.
+
+The controlWidget parameter should be set by the child class of AssetInstance.
+

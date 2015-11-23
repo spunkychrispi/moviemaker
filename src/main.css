@@ -1,0 +1,181 @@
+
+
+@font-face {
+    src: url("/assets/fonts/DinMittelschriftSTD.otf");
+    fontFamily: DINMittelschrift;
+    fontWeight: normal;
+}
+
+Application {
+	font-family: DINMittelschrift;
+	font-size: 12;
+	font-thickness: 30;
+	color: #FFFFFF;
+	focusThickness: 0;
+	backgroundGradientColors: #000000, #000000;
+}
+
+global {
+	modalTransparencyBlur: 0;
+    modalTransparency: 0.0;    
+    modalTransparencyColor: #000000;
+}
+
+
+TextInput, CheckBox {
+	focus-alpha: 0;
+}
+
+/*FadeButton.playerControlButton {
+			backgroundColor: #000000;
+			borderThickness: 1;
+			borderStyle: solid;
+			borderColor: #AFAFAF;
+		}*/
+		
+PlayButton, RewindButton, ShowControlsButton {
+			
+			borderThickness: 1;
+			borderStyle: solid;
+			borderColor: #AFAFAF;
+		}
+		
+FadeButton.makerControlButton {
+			borderThickness: 1;
+			borderStyle: solid;
+			borderColor: #AFAFAF;
+			font-size: 12;
+			
+			backgroundColor: #000000;
+			backgroundAlpha: .3;
+}
+
+global { focusThickness: 0; }
+
+Label.timeMeter {
+	font-family: Ariel;
+	font-size: 11;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+MovieTimeMeter {
+	font-family: Ariel;
+	font-size: 11;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+TextInput, TextArea { 
+	color: #000000;
+	fontSize: 16;
+	borderColor: #000000;
+	borderStyle: solid;
+	borderThickness: "1"
+}
+
+SaveForm {
+	background-color: #000000;
+	background-alpha: .8;
+	corner-radius: 20;
+}
+
+Label.formHeader {
+	font-size: 18;
+}
+
+
+Label.helpLabel {
+	font-size: 14;
+	color: #C6DAFB;
+}
+
+Label.helpStep {
+	font-size: 15;
+	color: #0284FC;
+}
+
+.help {
+	font-size: 14;
+}
+
+
+HBox.cannedAssets {
+	bottom: 3px;
+}
+
+HScrollBar {
+	downArrowUpSkin: Embed('/assets/scroll_down.png');
+	downArrowDownSkin: Embed('/assets/scroll_down.png');
+	downArrowOverSkin: Embed('/assets/scroll_down.png');
+	upArrowUpSkin: Embed('/assets/scroll_up.png');
+	upArrowDownSkin: Embed('/assets/scroll_up.png');
+	upArrowOverSkin: Embed('/assets/scroll_up.png');
+	trackSkin: Embed(source='/assets/scroll_track.png');
+	thumbUpSkin: Embed('/assets/scroll_thumb.png');
+	thumbDownSkin: Embed('/assets/scroll_thumb.png');
+	thumbOverSkin: Embed('/assets/scroll_thumb.png');
+}
+
+
+VScrollBar {
+	downArrowUpSkin: Embed('/assets/scroll2_down.png');
+	downArrowDownSkin: Embed('/assets/scroll2_down.png');
+	downArrowOverSkin: Embed('/assets/scroll2_down.png');
+	upArrowUpSkin: Embed('/assets/scroll2_up.png');
+	upArrowDownSkin: Embed('/assets/scroll2_up.png');
+	upArrowOverSkin: Embed('/assets/scroll2_up.png');
+	trackSkin: Embed(source='/assets/scroll2_track.png');
+	thumbUpSkin: Embed('/assets/scroll2_thumb.png');
+	thumbDownSkin: Embed('/assets/scroll2_thumb.png');
+	thumbOverSkin: Embed('/assets/scroll2_thumb.png');
+}
+
+BorderImage {
+	borderThickness: 0;
+}
+
+BorderCloseImage {
+	borderThickness: 0;
+}
+
+AlertBox, DialogueBox {
+	backgroundColor: #000000;
+	backgroundAlpha: .8;
+	horizontalAlign: center;
+	
+	paddingTop: 20px;
+	verticalGap: 0px;
+}
+
+
+HelpBox {
+	backgroundColor: #000000;
+	backgroundAlpha: .8;
+}
+
+AlertBox.saveAlert, DialogueBox.saveAlert {
+	paddingTop: 55px;
+}
+
+.alertTitle {
+	font-size: 24;
+	paddingBottom: 0px;
+}
+
+.alertMessage {
+	font-size: 16;
+	paddingTop: 0px;
+	paddingBottom: 16px;
+}
+
+.alertButton {
+}
+
+ProgressBar {
+	trackHeight: 14px;
+	borderColor: #FFFFFF;
+	trackColors: #1E1C1D,#1E1C1D;
+	barColor: #00AAF0;
+}
+

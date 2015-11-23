@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var labelText:String;
+			
+			[Bindable]
+			public var labelY:int;
+		]]>
+	</mx:Script>
+	
+	<mx:Label x="0" y="{labelY}" textAlign="center" width="100%" height="100%" text="{labelText}"  />
+	
+</mx:Canvas>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="scion.components.*" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import scion.components.FadeButton;
+			import mx.managers.PopUpManager;
+			import mx.events.CloseEvent;
+			
+			[Bindable]
+			public var title:String;
+			
+			[Bindable]
+			public var message:String;
+			
+			[Bindable]
+			public var buttonLabel:String;
+			
+			[Bindable]
+			public var labelX:Number = 20;
+			
+			function cancelClickHandler(event:Event)
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+			
+			function confirmClickHandler(event:Event) 
+			{
+				PopUpManager.removePopUp(this);
+				dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	<mx:Label styleName="alertTitle" id="titleLabel" text="{title}" />
+	
+	<mx:Label styleName="alertMessage" text="{message}" />
+	
+	<mx:Canvas>
+					
+		<ns1:FadeButton click="confirmClickHandler(event);" labelText="Yes"
+					width="71" height="26" backgroundColor="#0870D0" 
+					borderStyle="solid" borderThickness="1" borderColor="#005CB2" 
+					labelY="0" labelX="17" fontSize="16" fadeAlpha="1" />
+					
+		<ns1:FadeButton x="80" click="cancelClickHandler(event);" labelText="No"
+					width="71" height="26" backgroundColor="#D03B1E" 
+					borderStyle="solid" borderThickness="1" borderColor="#5B1D11" 
+					labelY="0" labelX="{labelX}" fontSize="16" fadeAlpha="1" />
+	</mx:Canvas>
+	
+	
+</mx:VBox>

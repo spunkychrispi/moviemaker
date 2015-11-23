@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="232" height="86">
+	<mx:Button x="31" y="49" label="Import YouTube Video" click="buttonClickHandler(event)" />
+	<mx:TextInput x="30" y="14" id="youTubeID" text="YouTube Video ID" />
+	
+	<mx:Script>
+		<![CDATA[
+
+			import flash.events.Event;
+			import movie.assets.YouTubeAssetClassCreator;
+			import mx.core.Application;
+
+			var youTubeClassCreator:YouTubeAssetClassCreator;
+
+			function buttonClickHandler(event:Event) {
+				youTubeClassCreator = new YouTubeAssetClassCreator(youTubeID.text);
+				youTubeClassCreator.addEventListener(Event.COMPLETE, completeHandler);
+           		youTubeClassCreator.initialize();
+            
+        	}
+        
+	        private function completeHandler(event:Event) {
+	        	 
+	            var youTubeClass = youTubeClassCreator.createClass();
+	            Application.application.assetList.addAsset(youTubeClass, 9);
+			}
+
+
+		]]>
+	</mx:Script>
+</mx:Module>

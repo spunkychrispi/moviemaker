@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BorderCloseImage xmlns="scion.assets.*" xmlns:mx="http://www.adobe.com/2006/mxml" scaleContent="false" maintainAspectRatio="true">
+
+	<mx:Script>
+		<![CDATA[
+			public var asset:*;
+			
+		]]>
+	</mx:Script>
+	
+</BorderCloseImage>

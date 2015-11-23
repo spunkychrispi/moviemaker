@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HSlider xmlns:mx="http://www.adobe.com/2006/mxml" value="1" minimum="1" snapInterval="1" creationComplete="_initialize();" change="_changeHandler(event);" liveDragging="true">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import mx.events.SliderEvent;
+			import mx.events.FlexEvent;
+			import mx.core.Application;
+			import movie.movie.MovieEvent;
+			
+			public var numberOfFrames:int;
+			
+			protected function _initialize()
+			{
+				maximum = numberOfFrames ? numberOfFrames : 1;
+				//value = 1;
+				
+				Application.application.addEventListener(FlexEvent.APPLICATION_COMPLETE, applicationCompleteHandler);
+			}
+			
+			protected function applicationCompleteHandler(event:Event) {
+				Application.application.theMovie.addEventListener(MovieEvent.MOVIE_FRAME_CHANGE, frameChangeHandler);
+				Application.application.theMovie.addEventListener(MovieEvent.MOVIE_DURATION_CHANGE, durationChangeHandler);
+			}
+			
+			protected function frameChangeHandler(event:Event) {
+				var temp:int = Application.application.theMovie.currentFrame;
+				value = Application.application.theMovie.currentFrame;
+			}
+				
+				
+			protected function durationChangeHandler(event:Event=null) {
+				maximum = Application.application.theMovie.numberOfFrames;
+			}	
+				
+			
+			protected function _changeHandler(event:SliderEvent)
+			{
+				var frame = event.value;
+				Application.application.theMovie.goToFrame(frame);
+				Application.application.theMovie.playCurrentFrame();
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:HSlider>

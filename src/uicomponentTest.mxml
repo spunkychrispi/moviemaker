@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" xmlns:ns1="scion.components.*">
+	
+	
+	<mx:Canvas width="100" height="100">
+		
+		<mx:Label width="300" height="200" text="asdfasdfasdf;akldjsf;aklsdfja;klsdfja;lsdkfja;dksjfa;sdfjals;fjas;lfjas;fjals;fja;lsfja;klsjfl;asfjals;kjfa;lsfja;lskfj;alksdfj;akls" />
+	</mx:Canvas>
+	
+	
+	
+	
+</mx:Application>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" verticalScrollPolicy="off" horizontalScrollPolicy="on">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.TextInput;
+			
+			var clickedTextFields:Object = new Object();
+		
+			function textClickHandler(event:Event, target:TextInput) {
+				//var textField:TextField = event.target as TextField;
+				var targetId:String = target.id;
+				if (! clickedTextFields.hasOwnProperty(targetId)) {
+					target.text = "";
+					target.setStyle("color", "#656565");
+					clickedTextFields[targetId] = true;
+				}
+				
+				event.target.removeEventListener(MouseEvent.CLICK, textClickHandler);
+			}
+			
+		/*	function textClickHandler2(event:Event, target:TextInput) {
+				extraTextInputDefault.visible = 0;
+				
+				if (! youTubeFieldClicked) {
+					textClickHandler(event, target);
+					youTubeFieldClicked = true;
+				} 
+			}
+			
+			function youTubeLabelClickHandler(event:Event) {
+				//youTubeText.dispatchEvent(new MouseEvent(MouseEvent.CLICK, true, false));
+				textClickHandler2(event, youTubeText);
+				
+				//youTubeTextInput.setStyle = "#656565";
+				//clickedTextFields.push(youTubeTextInput);
+				
+				focusManager.setFocus(youTubeText);
+			}*/
+		]]>
+	</mx:Script>
+</mx:Canvas>

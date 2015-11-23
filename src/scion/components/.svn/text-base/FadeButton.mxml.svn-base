@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FadeButtonBase xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" useHandCursor="true" buttonMode="true" >
+	
+	<mx:Script>
+		<![CDATA[
+	
+			/**
+			 * Button made from an image and label. Is faded except when rolled over or down. Couldn't use the Button
+			 * component for this because the button component label strangely enough will only take a bold font.
+			 */
+			 
+			
+			[Bindable]
+			public var imageClass:Class;
+			
+			[Bindable]
+			public var activeImageClass:Class;
+			
+			[Bindable]
+			public var labelText:String;
+			
+			[Bindable]
+			public var labelX:int;
+			
+			[Bindable]
+			public var labelY:int;
+			
+			[Bindable]
+			public var label2Text:String;
+			
+			[Bindable]
+			public var label2X:int;
+			
+			[Bindable]
+			public var label2Y:int;
+			
+			[Bindable]
+			public var imageX:int = 0;
+			
+			[Bindable]
+			public var imageY:int = 0;
+			
+			
+			public override function activate() {
+				
+				if (activeImageClass) {
+					theImage.source = activeImageClass;
+				}
+				
+				super.activate();
+			}
+			
+			
+			public override function deactivate(force:Boolean=false) {
+				if (activeImageClass) {
+					theImage.source = imageClass;
+				}
+				
+				super.deactivate(force);
+			}
+		
+			
+			
+			override function doFade(alpha) {
+				if (onlyFadeIcons) {
+					theImage.alpha = alpha;
+				}
+				
+				super.doFade(alpha);
+			}
+			
+	
+		]]>
+	</mx:Script>
+	
+	<mx:Image x="{imageX}" y="{imageY}" id="theImage" source="{imageClass}" alpha="1" useHandCursor="true" buttonMode="true" mouseChildren="false" />
+	<mx:Label x="{labelX}" y="{labelY}" text="{labelText}" id="theLabel" useHandCursor="true" buttonMode="true" mouseChildren="false" />
+	<mx:Label x="{label2X}" y="{label2Y}" text="{label2Text}" id="theLabel2" useHandCursor="true" buttonMode="true" mouseChildren="false" />
+	
+</FadeButtonBase>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MovieMakerTab xmlns="scion.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="685" height="149" creationComplete="initCCHandler(event);" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import mx.containers.ViewStack;
+		
+			public var label1:String;
+			public var label2:String;
+			
+			public var uploadAssetsIndex:int;
+			public var uploadAssetsLabel:String;
+			
+			[Bindable]
+			public var doUploadAssets:Boolean = false;
+			
+			function initCCHandler(event:Event) 
+			{
+				if (! label2) {
+					theLabel2.visible = false;
+				}
+			}
+			
+			 function uploadAssetsClickHandler(event:Event) {
+		     	ViewStack(parent).selectedIndex = uploadAssetsIndex;
+		     }
+					
+		]]>
+	</mx:Script>
+	
+	<mx:Label x="-4" y="8" fontSize="18" text="{label1}" visible="false" />
+	<mx:Label x="98" y="12" id="theLabel2" fontSize="14" color="#0084FF" text="{label2}" visible="false" />
+	<ScrollHBox styleName="cannedAssets" x="0" y="20" width="570" height="111" horizontalGap="4" id="assetListContainer" horizontalScrollPolicy="auto"/>
+	
+	<FadeButtonBase x="475" y="12" visible="{doUploadAssets}" click="uploadAssetsClickHandler(event);"  activeStateOn="true" useHandCursor="true" buttonMode="true" mouseChildren="false">
+		<mx:Label id="cannedHeading" text="{uploadAssetsLabel}" fontSize="14" />
+		<mx:Image y="6" x="143" width="5" height="9" source="@Embed('/assets/forward_arrow.png')" />
+	</FadeButtonBase>
+	
+</MovieMakerTab>

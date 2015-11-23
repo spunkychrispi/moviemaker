@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initApp()" >
+	
+	<mx:Script>
+		<![CDATA[
+		
+			/*
+			
+			Examples_FileUpload
+			
+			Written by:
+			Dustin Andrew
+			dustin@flash-dev.com
+			www.flash-dev.com
+			
+			*/
+		
+			import mx.states.*;
+			import mx.controls.*;
+			import mx.managers.*;
+            import mx.events.*;
+			import flash.events.*;
+			import flash.net.*;
+			
+			private const _strUploadDomain:String = "/";
+			private const _strUploadScript:String = _strUploadDomain + "sites/default/quick_upload.php";
+			
+			private var _arrUploadFiles:Array;
+			private var _numCurrentUpload:Number = 0;
+			private var _refAddFiles:FileReferenceList;	
+			private var _refUploadFile:FileReference;
+			
+			private var _winProgress:winProgress;
+			
+			private function initApp():void {
+				Security.allowDomain("*");
+				_arrUploadFiles = new Array();
+			}			
+			
+			// Called to add file(s) for upload
+			private function addFiles():void {
+				_refAddFiles = new FileReferenceList();
+				_refAddFiles.addEventListener(Event.SELECT, onSelectFile);
+				_refAddFiles.browse();
+			}
+			
+			// Called to remove selected file(s) for upload
+			private function removeFiles():void {
+				var arrSelected:Array = listFiles.selectedIndices;
+				for (var i:Number = 0; i < arrSelected.length; i++) {
+					_arrUploadFiles[Number(arrSelected[i])] = null;
+				}
+				for (var j:Number = 0; j < _arrUploadFiles.length; j++) {
+					if (_arrUploadFiles[j] == null) {
+						_arrUploadFiles.splice(j, 1);
+						j--;
+					}
+				}
+				listFiles.dataProvider = _arrUploadFiles;
+				listFiles.selectedIndex = 0;
+				if (_arrUploadFiles.length == 0) {
+					btnUpload.enabled = false;
+				} else {
+					btnUpload.enabled = true;
+				}
+			}
+			
+			// Called when a file is selected
+			private function onSelectFile(event:Event):void {
+				var arrFoundList:Array = new Array();
+				// Get list of files from fileList, make list of files already on upload list
+				for (var i:Number = 0; i < _arrUploadFiles.length; i++) {
+					for (var j:Number = 0; j < _refAddFiles.fileList.length; j++) {
+						if (_arrUploadFiles[i].label == _refAddFiles.fileList[j].name) {
+							arrFoundList.push(_refAddFiles.fileList[j].name);
+							_refAddFiles.fileList.splice(j, 1);
+							j--;
+						}
+					}
+				}
+				if (_refAddFiles.fileList.length >= 1) {
+					for (var k:Number = 0; k < _refAddFiles.fileList.length; k++) {
+						_arrUploadFiles.push({label:_refAddFiles.fileList[k].name, data:_refAddFiles.fileList[k]});
+					}
+					listFiles.dataProvider = _arrUploadFiles;
+					listFiles.selectedIndex = _arrUploadFiles.length - 1;
+				}				
+				if (arrFoundList.length >= 1) {
+					Alert.show("The file(s): \n\n• " + arrFoundList.join("\n• ") + "\n\n...are already on the upload list. Please change the filename(s) or pick a different file.", "File(s) already on list");
+				}
+				if (_arrUploadFiles.length == 0) {
+					btnUpload.enabled = false;
+				} else {
+					btnUpload.enabled = true;
+				}
+			}
+			
+			
+			// Cancel and clear eventlisteners on last upload
+			private function clearUpload():void {
+				_numCurrentUpload = 0;
+				_refUploadFile.removeEventListener(ProgressEvent.PROGRESS, onUploadProgress);
+				_refUploadFile.removeEventListener(Event.COMPLETE, onUploadComplete);
+				_refUploadFile.removeEventListener(IOErrorEvent.IO_ERROR, onUploadIoError);
+				_refUploadFile.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onUploadSecurityError);
+				_refUploadFile.cancel();
+			}
+			
+			// Called to upload file based on current upload number
+			private function startUpload(booIsFirst:Boolean):void {
+				if (booIsFirst) {
+					_numCurrentUpload = 0;
+				}
+				if (_arrUploadFiles.length > 0) {
+					_winProgress = winProgress(PopUpManager.createPopUp(this, winProgress, true));
+					_winProgress.btnCancel.removeEventListener("click", onUploadCanceled);
+					_winProgress.btnCancel.addEventListener("click", onUploadCanceled);
+					_winProgress.title = "Uploading file to " + _strUploadDomain;
+					_winProgress.txtFile.text = _arrUploadFiles[_numCurrentUpload].label;
+					_winProgress.progBar.label = "0%";
+					PopUpManager.centerPopUp(_winProgress);
+					
+					// Variables to send along with upload
+					var sendVars:URLVariables = new URLVariables();
+					sendVars.action = "upload";
+					
+					var request:URLRequest = new URLRequest();
+					request.data = sendVars;
+				    request.url = _strUploadScript;
+				    request.method = URLRequestMethod.POST;
+				    _refUploadFile = new FileReference();
+				    _refUploadFile = _arrUploadFiles[_numCurrentUpload].data;
+				    _refUploadFile.addEventListener(ProgressEvent.PROGRESS, onUploadProgress);
+				   	_refUploadFile.addEventListener(Event.COMPLETE, onUploadComplete);
+				    _refUploadFile.addEventListener(IOErrorEvent.IO_ERROR, onUploadIoError);
+				  	_refUploadFile.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onUploadSecurityError);
+				    _refUploadFile.upload(request, "file", false);
+				}
+			}
+			
+			// Called on upload cancel
+			private function onUploadCanceled(event:Event):void {
+				PopUpManager.removePopUp(_winProgress);
+				_winProgress == null;
+				_refUploadFile.cancel();
+				clearUpload();
+			}
+			
+			// Get upload progress
+			private function onUploadProgress(event:ProgressEvent):void {
+				var numPerc:Number = Math.round((Number(event.bytesLoaded) / Number(event.bytesTotal)) * 100);
+				_winProgress.progBar.setProgress(numPerc, 100);
+				_winProgress.progBar.label = numPerc + "%";
+				_winProgress.progBar.validateNow();
+				if (numPerc > 90) {
+					_winProgress.btnCancel.enabled = false;
+				} else {
+					_winProgress.btnCancel.enabled = true;
+				}
+			}
+			
+			// Called on upload complete
+			private function onUploadComplete(event:Event):void {
+				_numCurrentUpload++;
+				PopUpManager.removePopUp(_winProgress);
+				if (_numCurrentUpload < _arrUploadFiles.length) {
+					startUpload(false);
+				} else {
+					Alert.show("File(s) have been uploaded.", "Upload successful");
+				}
+			}
+			
+			// Called on upload io error
+			private function onUploadIoError(event:IOErrorEvent):void {
+				Alert.show("IO Error in uploading file.", "Error");
+				PopUpManager.removePopUp(_winProgress);
+				_winProgress == null;
+				_refUploadFile.cancel();
+				clearUpload();
+			}
+			
+			// Called on upload security error
+			private function onUploadSecurityError(event:SecurityErrorEvent):void {
+				Alert.show("Security Error in uploading file.", "Error");
+				PopUpManager.removePopUp(_winProgress);
+				_winProgress == null;
+				_refUploadFile.cancel();
+				clearUpload();
+			}
+			
+		]]>
+	</mx:Script>
+	
+		<mx:Panel width="300" height="266" layout="absolute" horizontalCenter="0" verticalCenter="0" id="panUpload" title="Select file(s) for upload">
+			<mx:VBox left="10" bottom="10" top="10" right="10">
+				<mx:List width="100%" id="listFiles" height="100%" allowMultipleSelection="true"/>
+				<mx:HBox width="100%" horizontalAlign="center">
+					<mx:Button label="Add file(s).." id="btnAdd" click="addFiles()"/>
+					<mx:Button label="Remove file(s)" id="btnRemove" click="removeFiles()"/>
+				</mx:HBox>
+			</mx:VBox>
+			<mx:ControlBar horizontalAlign="right">
+				<mx:Button label="Upload file(s)" id="btnUpload" click="startUpload(true)" enabled="false"/>
+			</mx:ControlBar>
+		</mx:Panel>
+	</mx:Canvas>
